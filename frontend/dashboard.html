@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireSmart Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="logo" href="dashboard.html">HireSmart AI</a>
+        <nav>
+            <a class="active" href="dashboard.html">Dashboard</a>
+            <a href="upload-resume.html">Upload</a>
+            <button id="logoutButton" class="link-button" type="button">Logout</button>
+        </nav>
+    </header>
+
+    <main class="dashboard">
+        <section class="hero-band">
+            <div>
+                <span class="eyebrow">Welcome</span>
+                <h1 id="welcomeTitle">Resume analysis dashboard</h1>
+                <p>Track uploaded resumes, ATS scores, and recent screening feedback.</p>
+            </div>
+            <a class="button-link" href="upload-resume.html">Upload resume</a>
+        </section>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <span>Total resumes</span>
+                <strong id="totalResumes">0</strong>
+            </article>
+            <article class="stat-card">
+                <span>Average score</span>
+                <strong id="averageScore">0</strong>
+            </article>
+            <article class="stat-card">
+                <span>Latest score</span>
+                <strong id="latestScore">0</strong>
+            </article>
+        </section>
+
+        <section class="panel">
+            <div class="section-heading">
+                <h2>Recent resumes</h2>
+                <span id="dashboardMessage" class="inline-message" aria-live="polite"></span>
+            </div>
+            <div id="resumeList" class="resume-list"></div>
+        </section>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>

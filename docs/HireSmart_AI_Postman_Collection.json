@@ -1,0 +1,832 @@
+{
+  "info": {
+    "name": "HireSmart APIs",
+    "description": "PayPal-style Postman collection for HireSmart AI authentication, resume upload, analysis, dashboard, and error handling examples.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "resume_id",
+      "value": ""
+    },
+    {
+      "key": "other_user_resume_id",
+      "value": ""
+    },
+    {
+      "key": "job_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Authorization",
+      "item": [
+        {
+          "name": "POST Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/auth/register",
+            "description": "Create a user account and copy the returned token to the token environment variable."
+          },
+          "response": [
+            {
+              "name": "201 - Register Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"gateway\": \"HireSmart API Gateway\",\n  \"message\": \"User registered successfully\",\n  \"token\": \"1|xxxxxxxxxxxx\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/auth/login",
+            "description": "Login and copy the returned token to the token environment variable."
+          },
+          "response": [
+            {
+              "name": "200 - Login Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"gateway\": \"HireSmart API Gateway\",\n  \"message\": \"Login successful\",\n  \"token\": \"1|xxxxxxxxxxxx\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Resume",
+      "item": [
+        {
+          "name": "POST Upload Resume",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "My Resume",
+                  "type": "text"
+                },
+                {
+                  "key": "resume",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": "{{base_url}}/resumes/upload",
+            "description": "Upload a PDF or DOCX resume. Copy resume.resume_id to the resume_id environment variable."
+          },
+          "response": [
+            {
+              "name": "201 - Upload Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Resume uploaded successfully\",\n  \"resume\": {\n    \"resume_id\": \"a7c46ff2-78aa-4f38-a23a-0db237b4e3b1\",\n    \"title\": \"My Resume\",\n    \"original_filename\": \"resume.pdf\",\n    \"file_type\": \"pdf\",\n    \"ats_score\": null\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET List Resumes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/resumes",
+            "description": "List resumes owned by the authenticated user."
+          },
+          "response": [
+            {
+              "name": "200 - Resume List",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"resume_id\": \"a7c46ff2-78aa-4f38-a23a-0db237b4e3b1\",\n    \"title\": \"My Resume\",\n    \"original_filename\": \"resume.pdf\",\n    \"ats_score\": 81\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "GET Show Resume",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/resumes/{{resume_id}}",
+            "description": "Show one resume with latest analysis and versions."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Delete Resume",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/resumes/{{resume_id}}",
+            "description": "Delete one resume owned by the authenticated user."
+          },
+          "response": [
+            {
+              "name": "200 - Deleted",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Resume deleted successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Analysis",
+      "item": [
+        {
+          "name": "POST Analyze Resume",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resume_id\": \"{{resume_id}}\",\n  \"job_description\": \"Generalist role with communication, problem solving, and project management.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/analyze",
+            "description": "Analyze an uploaded resume. resume_id is a UUID copied from Upload Resume."
+          },
+          "response": [
+            {
+              "name": "200 - Analysis Complete",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Analysis complete\",\n  \"analysis\": {\n    \"resume_id\": \"a7c46ff2-78aa-4f38-a23a-0db237b4e3b1\",\n    \"total_score\": 81,\n    \"strengths\": [\n      \"Clear professional profile\",\n      \"Relevant skills are easy to scan\",\n      \"Readable resume structure\"\n    ],\n    \"weaknesses\": [\n      \"Could include more measurable achievements\",\n      \"Could include more job-specific keywords\"\n    ],\n    \"missing_keywords\": [\n      \"project\",\n      \"management\"\n    ],\n    \"summary\": \"Your resume is ready for baseline screening. Improve it further by adding measurable outcomes and matching more job keywords.\"\n  },\n  \"recommendations\": [\n    \"project\",\n    \"management\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/analysis/dashboard",
+            "description": "Return dashboard metrics, latest resume, resume list, and score trend."
+          },
+          "response": [
+            {
+              "name": "200 - Dashboard",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total_resumes\": 1,\n  \"average_score\": 81,\n  \"latest_resume\": {\n    \"resume_id\": \"a7c46ff2-78aa-4f38-a23a-0db237b4e3b1\",\n    \"title\": \"My Resume\",\n    \"ats_score\": 81\n  },\n  \"resumes\": [],\n  \"score_trend\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET Show Analysis",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/analysis/{{resume_id}}",
+            "description": "Show the latest analysis for one resume."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Gateway / External Services",
+      "item": [
+        {
+          "name": "GET Gateway Route Map",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/gateway/routes",
+            "description": "Shows which gateway routes point to service groups."
+          }
+        },
+        {
+          "name": "POST Register via Site 1 Gateway",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/site1/register",
+            "description": "Creates a user through the gateway route for User Service 1."
+          }
+        },
+        {
+          "name": "POST Login via Site 1 Gateway",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/site1/login",
+            "description": "Logs in through the gateway route for User Service 1 and saves token."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.environment.set(\"token\", json.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Profile via Site 2 Gateway",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/site2/users/profile",
+            "description": "Calls protected User Service 2 profile through the gateway."
+          }
+        },
+        {
+          "name": "PUT Update Profile via Site 2 Gateway",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Test User\",\n  \"phone\": \"09123456789\",\n  \"bio\": \"Testing gateway to external user service.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/site2/users/profile",
+            "description": "Updates profile through the gateway route for User Service 2."
+          }
+        },
+        {
+          "name": "POST Logout via Site 2 Gateway",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/site2/logout",
+            "description": "Logs out the current token through the gateway route for User Service 2."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Handling",
+      "item": [
+        {
+          "name": "400 Bad Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@test.com\",\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/auth/login",
+            "description": "Send malformed JSON to test a bad request response."
+          },
+          "response": [
+            {
+              "name": "400 - Bad Request",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Bad request.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "401 Unauthorized",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/analysis/dashboard",
+            "description": "Call a protected route without Authorization: Bearer {{token}}."
+          },
+          "response": [
+            {
+              "name": "401 - Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated. Login first and send a Bearer token.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "403 Forbidden",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resume_id\": \"{{other_user_resume_id}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/analyze",
+            "description": "Use another user's resume ID with your token."
+          },
+          "response": [
+            {
+              "name": "403 - Forbidden",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "422 Validation Error - Missing Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@test.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/auth/login",
+            "description": "Laravel validation returns 422 when required JSON fields are missing."
+          },
+          "response": [
+            {
+              "name": "422 - Missing Password",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"gateway\": \"HireSmart API Gateway\",\n  \"errors\": {\n    \"password\": [\n      \"The password field is required.\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "422 Validation Error - Invalid Resume File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "test",
+                  "type": "text"
+                },
+                {
+                  "key": "resume",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": "{{base_url}}/resumes/upload",
+            "description": "Attach image.jpg or another invalid file type to test resume validation."
+          },
+          "response": [
+            {
+              "name": "422 - Invalid Resume File",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"resume\": [\n      \"The resume field must be a file of type: pdf, docx.\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "500 Internal Server Error",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{base_url}}/auth/login",
+            "description": "Temporarily break DB_PASSWORD in .env, run this request, then restore .env and restart Laravel."
+          },
+          "response": [
+            {
+              "name": "500 - Server Error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"SQLSTATE[HY000] [1045] Access denied for user...\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

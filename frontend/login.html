@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireSmart Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+    <main class="auth-shell">
+        <section class="brand-panel">
+            <span class="eyebrow">HireSmart AI</span>
+            <h1>Resume screening for job seekers.</h1>
+            <p>Sign in to upload a resume, run an ATS-style check, and review improvement notes.</p>
+        </section>
+
+        <section class="auth-card">
+            <h2>Login</h2>
+            <form id="loginForm" class="form-stack">
+                <label for="email">Email</label>
+                <input type="email" id="email" autocomplete="email" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" autocomplete="current-password" required>
+
+                <button type="submit">Login</button>
+            </form>
+            <p id="message" class="form-message" aria-live="polite"></p>
+            <p class="muted-link">No account yet? <a href="register.html">Create one</a></p>
+        </section>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
