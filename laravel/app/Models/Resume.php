@@ -12,6 +12,14 @@ class Resume extends Model
 {
     use HasUuids;
 
+    /**
+     * @return list<string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['resume_id'];
+    }
+
     protected $primaryKey = 'resume_id';
     public $incrementing = false;
     protected $keyType = 'string';

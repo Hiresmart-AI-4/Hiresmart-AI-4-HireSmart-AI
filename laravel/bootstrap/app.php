@@ -1,10 +1,13 @@
 <?php
 
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -36,12 +39,23 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
 
-            $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+            report($e);
 
-            return response()->json([
-                'message' => config('app.debug')
-                    ? $e->getMessage()
-                    : 'Server error. Check the Laravel log for details.',
-            ], $status);
+            $status = match (true) {
+                $e instanceof HttpExceptionInterface => $e->getStatusCode(),
+                $e instanceof ModelNotFoundException => 404,
+                $e instanceof QueryException => 503,
+                default => 500,
+            };
+
+            $message = config('app.debug')
+                ? $e->getMessage()
+                : match (true) {
+                    $e instanceof ModelNotFoundException => 'The requested resource was not found.',
+                    $e instanceof QueryException => 'Database is unavailable. Confirm migrations ran on Render PostgreSQL.',
+                    default => 'Server error. Check the Laravel log for details.',
+                };
+
+            return response()->json(['message' => $message], $status);
         });
     })->create();

@@ -43,18 +43,25 @@ class AnalysisController extends Controller
 
     public function dashboard(Request $request)
     {
-        $resumes = Resume::where('user_id', $request->user()->id)
-            ->with('analysis')
+        $resumes = Resume::query()
+            ->where('user_id', $request->user()->id)
             ->orderByDesc('created_at')
-            ->get();
+            ->get([
+                'resume_id',
+                'user_id',
+                'title',
+                'original_filename',
+                'ats_score',
+                'created_at',
+            ]);
 
         return response()->json([
             'total_resumes' => $resumes->count(),
             'average_score' => round((float) $resumes->avg('ats_score'), 2),
             'latest_resume' => $resumes->first(),
             'resumes' => $resumes,
-            'score_trend' => $resumes->map(fn ($resume) => [
-                'date' => $resume->created_at->format('Y-m-d'),
+            'score_trend' => $resumes->map(fn (Resume $resume) => [
+                'date' => $resume->created_at?->format('Y-m-d') ?? '',
                 'score' => $resume->ats_score ?? 0,
                 'title' => $resume->title,
             ])->values(),

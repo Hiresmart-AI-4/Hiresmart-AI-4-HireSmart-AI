@@ -10,6 +10,14 @@ class Analysis extends Model
 {
     use HasUuids;
 
+    /**
+     * @return list<string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['analysis_id'];
+    }
+
     protected $primaryKey = 'analysis_id';
     public $incrementing = false;
     protected $keyType = 'string';

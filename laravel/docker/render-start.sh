@@ -21,6 +21,7 @@ php artisan storage:link --force 2>/dev/null || true
 # Run migrations first so PostgreSQL tables (cache, sessions, etc.) exist
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
     php artisan migrate --force
+    php artisan migrate:status --no-ansi
 fi
 
 # Clear stale bootstrap files (do not use optimize:clear — it hits DB cache before tables exist)

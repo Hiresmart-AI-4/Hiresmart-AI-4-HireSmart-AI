@@ -110,7 +110,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/analyze', [AnalysisController::class, 'analyze']);
     Route::get('/analysis/dashboard', [AnalysisController::class, 'dashboard']);
-    Route::get('/analysis/{resumeId}', [AnalysisController::class, 'show']);
+    Route::get('/analysis/{resumeId}', [AnalysisController::class, 'show'])->whereUuid('resumeId');
 
     Route::get('/recommendations/resumes/{resumeId}', [RecommendationController::class, 'resume']);
     Route::get('/notifications', [NotificationController::class, 'index']);
