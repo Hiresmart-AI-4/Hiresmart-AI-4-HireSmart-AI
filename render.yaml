@@ -22,9 +22,9 @@ services:
       - key: SESSION_DRIVER
         value: "file"
       - key: APP_KEY
-        sync: false
+        value: "base64:aB/8R6bWPx0utUhlrOZlCciTIIWe6Tx34HVMJq0avNY="
       - key: APP_URL
-        sync: false
+        value: "https://hiresmart-ai.onrender.com"
       - key: DB_CONNECTION
         value: "pgsql"
       - key: DB_URL
