@@ -8,8 +8,19 @@ use Illuminate\Validation\ValidationException;
 
 class UserServiceOne
 {
+    public function __construct(private EmailValidationService $emailValidationService)
+    {
+    }
+
     public function register(array $data): array
     {
+        $emailValidation = $this->emailValidationService->validate((string) $data['email']);
+        if ($this->emailValidationService->shouldBlock($emailValidation)) {
+            throw ValidationException::withMessages([
+                'email' => ['Email validation failed: ' . ($emailValidation['reason'] ?? 'Invalid email address.')],
+            ]);
+        }
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -21,6 +32,7 @@ class UserServiceOne
             'message' => 'User registered successfully',
             'user' => $user,
             'token' => $user->createToken('postman')->plainTextToken,
+            'email_validation' => $emailValidation,
         ];
     }
 

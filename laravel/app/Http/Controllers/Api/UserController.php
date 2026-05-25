@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Gateways\ApiGateway;
 use App\Http\Controllers\Controller;
+use App\Services\EmailValidationService;
 use App\Services\UserServiceOne;
 use App\Services\UserServiceTwo;
 use Illuminate\Http\Request;
@@ -14,7 +15,8 @@ class UserController extends Controller
     public function __construct(
         private ApiGateway $gateway,
         private UserServiceOne $userServiceOne,
-        private UserServiceTwo $userServiceTwo
+        private UserServiceTwo $userServiceTwo,
+        private EmailValidationService $emailValidationService
     ) {
     }
 
@@ -51,6 +53,25 @@ class UserController extends Controller
         return $this->gateway->success(
             $this->userServiceOne->login($validator->validated())
         );
+    }
+
+    public function validateEmail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->gateway->validationErrors($validator->errors());
+        }
+
+        $result = $this->emailValidationService->validate((string) $validator->validated()['email']);
+
+        return $this->gateway->success([
+            'message' => 'Email verification completed.',
+            'result' => $result,
+            'is_blocked' => $this->emailValidationService->shouldBlock($result),
+        ]);
     }
 
     public function profile(Request $request)

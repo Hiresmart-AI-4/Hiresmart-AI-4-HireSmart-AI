@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "HireSmart APIs",
-    "description": "PayPal-style Postman collection for HireSmart AI authentication, resume upload, analysis, dashboard, and error handling examples.",
+    "description": "Import-ready Postman collection for the HireSmart AI Laravel API. Third-party API keys stay in laravel/.env; Postman calls the Laravel routes. Collection auth is configured as Bearer {{token}}; login/register scripts also save {{authToken}} for global-style Postman setups.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -14,7 +14,15 @@
       "value": ""
     },
     {
+      "key": "user_email",
+      "value": "postman@example.com"
+    },
+    {
       "key": "resume_id",
+      "value": ""
+    },
+    {
+      "key": "analysis_resume_id",
       "value": ""
     },
     {
@@ -24,11 +32,104 @@
     {
       "key": "job_id",
       "value": ""
+    },
+    {
+      "key": "search_what",
+      "value": "Laravel Developer"
+    },
+    {
+      "key": "search_where",
+      "value": "Cebu"
+    },
+    {
+      "key": "origin",
+      "value": "Cebu City Hall"
+    },
+    {
+      "key": "to_email",
+      "value": "receiver@example.com"
+    },
+    {
+      "key": "authToken",
+      "value": ""
     }
   ],
   "item": [
     {
-      "name": "Authorization",
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Test",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/test",
+            "description": "Confirms the API routes are reachable."
+          },
+          "response": [
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET Ping",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/ping",
+            "description": "Returns pong with a timestamp."
+          },
+          "response": [
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Auth",
       "item": [
         {
           "name": "POST Register",
@@ -44,28 +145,28 @@
                 "value": "application/json"
               }
             ],
+            "url": "{{base_url}}/auth/register",
+            "description": "Creates a user and saves the returned Bearer token. Register and Login both use {{user_email}} so credentials stay aligned.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+              "raw": "{\n  \"name\": \"Postman User\",\n  \"email\": \"{{user_email}}\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"role\": \"job_seeker\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            },
-            "url": "{{base_url}}/auth/register",
-            "description": "Create a user account and copy the returned token to the token environment variable."
+            }
           },
           "response": [
             {
-              "name": "201 - Register Success",
+              "name": "422 - Validation error",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
                 "url": "{{base_url}}"
               },
-              "status": "Created",
-              "code": 201,
+              "status": "Unprocessable Entity",
+              "code": 422,
               "_postman_previewlanguage": "json",
               "header": [
                 {
@@ -73,7 +174,61 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"gateway\": \"HireSmart API Gateway\",\n  \"message\": \"User registered successfully\",\n  \"token\": \"1|xxxxxxxxxxxx\"\n}"
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "422 - Duplicate email",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"email\": [\n      \"The email has already been taken.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonResponse = pm.response.json();",
+                  "const token = jsonResponse.token || jsonResponse.data?.token || jsonResponse.access_token;",
+                  "if (token) {",
+                  "  pm.environment.set(\"token\", token);",
+                  "  pm.environment.set(\"authToken\", token);",
+                  "  pm.globals.set(\"authToken\", token);",
+                  "  console.log(\"Auth Token:\", token);",
+                  "}"
+                ]
+              }
             }
           ]
         },
@@ -91,28 +246,28 @@
                 "value": "application/json"
               }
             ],
+            "url": "{{base_url}}/auth/login",
+            "description": "Logs in with the same {{user_email}} used by Register and saves the returned Bearer token.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\"\n}",
+              "raw": "{\n  \"email\": \"{{user_email}}\",\n  \"password\": \"password123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            },
-            "url": "{{base_url}}/auth/login",
-            "description": "Login and copy the returned token to the token environment variable."
+            }
           },
           "response": [
             {
-              "name": "200 - Login Success",
+              "name": "422 - Validation error",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
                 "url": "{{base_url}}"
               },
-              "status": "OK",
-              "code": 200,
+              "status": "Unprocessable Entity",
+              "code": 422,
               "_postman_previewlanguage": "json",
               "header": [
                 {
@@ -120,7 +275,405 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"success\": true,\n  \"gateway\": \"HireSmart API Gateway\",\n  \"message\": \"Login successful\",\n  \"token\": \"1|xxxxxxxxxxxx\"\n}"
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "422 - Invalid credentials",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"email\": [\n      \"The provided credentials are incorrect.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonResponse = pm.response.json();",
+                  "const token = jsonResponse.token || jsonResponse.data?.token || jsonResponse.access_token;",
+                  "if (token) {",
+                  "  pm.environment.set(\"token\", token);",
+                  "  pm.environment.set(\"authToken\", token);",
+                  "  pm.globals.set(\"authToken\", token);",
+                  "  console.log(\"Auth Token:\", token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST Validate Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/auth/validate-email",
+            "description": "Uses Mailboxlayer when configured; otherwise returns a skipped result.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"candidate@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "GET Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/profile",
+            "description": "Returns authenticated user profile."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "PUT Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/users/profile",
+            "description": "Updates authenticated user profile.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Postman User\",\n  \"phone\": \"09123456789\",\n  \"bio\": \"Testing HireSmart AI API from Postman.\",\n  \"preferences\": {\n    \"location\": \"Cebu\",\n    \"remote\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/auth/logout",
+            "description": "Revokes the current token."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
             }
           ]
         }
@@ -136,13 +689,16 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
               },
               {
                 "key": "Accept",
                 "value": "application/json"
               }
             ],
+            "url": "{{base_url}}/resumes/upload",
+            "description": "Upload a PDF or DOCX resume. The local parser is used; no external resume parser is required.",
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -157,20 +713,18 @@
                   "src": []
                 }
               ]
-            },
-            "url": "{{base_url}}/resumes/upload",
-            "description": "Upload a PDF or DOCX resume. Copy resume.resume_id to the resume_id environment variable."
+            }
           },
           "response": [
             {
-              "name": "201 - Upload Success",
+              "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
                 "url": "{{base_url}}"
               },
-              "status": "Created",
-              "code": 201,
+              "status": "Unauthorized",
+              "code": 401,
               "_postman_previewlanguage": "json",
               "header": [
                 {
@@ -178,7 +732,76 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"message\": \"Resume uploaded successfully\",\n  \"resume\": {\n    \"resume_id\": \"a7c46ff2-78aa-4f38-a23a-0db237b4e3b1\",\n    \"title\": \"My Resume\",\n    \"original_filename\": \"resume.pdf\",\n    \"file_type\": \"pdf\",\n    \"ats_score\": null\n  }\n}"
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.resume && json.resume.resume_id) {",
+                  "  pm.environment.set(\"resume_id\", json.resume.resume_id);",
+                  "  pm.environment.set(\"analysis_resume_id\", json.resume.resume_id);",
+                  "}"
+                ]
+              }
             }
           ]
         },
@@ -189,7 +812,8 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
               },
               {
                 "key": "Accept",
@@ -197,18 +821,18 @@
               }
             ],
             "url": "{{base_url}}/resumes",
-            "description": "List resumes owned by the authenticated user."
+            "description": "Lists resumes owned by the authenticated user."
           },
           "response": [
             {
-              "name": "200 - Resume List",
+              "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
                 "url": "{{base_url}}"
               },
-              "status": "OK",
-              "code": 200,
+              "status": "Unauthorized",
+              "code": 401,
               "_postman_previewlanguage": "json",
               "header": [
                 {
@@ -216,7 +840,43 @@
                   "value": "application/json"
                 }
               ],
-              "body": "[\n  {\n    \"resume_id\": \"a7c46ff2-78aa-4f38-a23a-0db237b4e3b1\",\n    \"title\": \"My Resume\",\n    \"original_filename\": \"resume.pdf\",\n    \"ats_score\": 81\n  }\n]"
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
             }
           ]
         },
@@ -227,7 +887,8 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
               },
               {
                 "key": "Accept",
@@ -235,37 +896,18 @@
               }
             ],
             "url": "{{base_url}}/resumes/{{resume_id}}",
-            "description": "Show one resume with latest analysis and versions."
-          },
-          "response": []
-        },
-        {
-          "name": "DELETE Delete Resume",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": "{{base_url}}/resumes/{{resume_id}}",
-            "description": "Delete one resume owned by the authenticated user."
+            "description": "Shows one resume with versions and analysis."
           },
           "response": [
             {
-              "name": "200 - Deleted",
+              "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
                 "url": "{{base_url}}"
               },
-              "status": "OK",
-              "code": 200,
+              "status": "Unauthorized",
+              "code": 401,
               "_postman_previewlanguage": "json",
               "header": [
                 {
@@ -273,7 +915,557 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"message\": \"Resume deleted successfully\"\n}"
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "PUT Update Resume",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/resumes/{{resume_id}}",
+            "description": "Updates resume title or active flag.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Resume Title\",\n  \"is_active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST Activate Resume",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/resumes/{{resume_id}}/activate",
+            "description": "Marks this resume active and deactivates other user resumes."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET Download Resume URL",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/resumes/{{resume_id}}/download",
+            "description": "Returns the stored public download URL."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET Compare Resumes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/resumes/compare/{{resume_id}}/{{analysis_resume_id}}",
+            "description": "Compares two resume records owned by the user."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "DELETE Resume",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/resumes/{{resume_id}}",
+            "description": "Deletes one resume and its stored file."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
             }
           ]
         }
@@ -289,7 +1481,8 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
               },
               {
                 "key": "Accept",
@@ -300,28 +1493,28 @@
                 "value": "application/json"
               }
             ],
+            "url": "{{base_url}}/analyze",
+            "description": "Runs ATS-style analysis for the uploaded resume.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"resume_id\": \"{{resume_id}}\",\n  \"job_description\": \"Generalist role with communication, problem solving, and project management.\"\n}",
+              "raw": "{\n  \"resume_id\": \"{{resume_id}}\",\n  \"job_description\": \"Laravel developer with PHP, MySQL, REST API, Git, Docker, communication, and problem solving.\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            },
-            "url": "{{base_url}}/analyze",
-            "description": "Analyze an uploaded resume. resume_id is a UUID copied from Upload Resume."
+            }
           },
           "response": [
             {
-              "name": "200 - Analysis Complete",
+              "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
                 "url": "{{base_url}}"
               },
-              "status": "OK",
-              "code": 200,
+              "status": "Unauthorized",
+              "code": 401,
               "_postman_previewlanguage": "json",
               "header": [
                 {
@@ -329,18 +1522,73 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"message\": \"Analysis complete\",\n  \"analysis\": {\n    \"resume_id\": \"a7c46ff2-78aa-4f38-a23a-0db237b4e3b1\",\n    \"total_score\": 81,\n    \"strengths\": [\n      \"Clear professional profile\",\n      \"Relevant skills are easy to scan\",\n      \"Readable resume structure\"\n    ],\n    \"weaknesses\": [\n      \"Could include more measurable achievements\",\n      \"Could include more job-specific keywords\"\n    ],\n    \"missing_keywords\": [\n      \"project\",\n      \"management\"\n    ],\n    \"summary\": \"Your resume is ready for baseline screening. Improve it further by adding measurable outcomes and matching more job keywords.\"\n  },\n  \"recommendations\": [\n    \"project\",\n    \"management\"\n  ]\n}"
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
             }
           ]
         },
         {
-          "name": "GET Dashboard",
+          "name": "GET Analysis Dashboard",
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
               },
               {
                 "key": "Accept",
@@ -348,18 +1596,18 @@
               }
             ],
             "url": "{{base_url}}/analysis/dashboard",
-            "description": "Return dashboard metrics, latest resume, resume list, and score trend."
+            "description": "Returns resume metrics and score trend."
           },
           "response": [
             {
-              "name": "200 - Dashboard",
+              "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
                 "url": "{{base_url}}"
               },
-              "status": "OK",
-              "code": 200,
+              "status": "Unauthorized",
+              "code": 401,
               "_postman_previewlanguage": "json",
               "header": [
                 {
@@ -367,7 +1615,61 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"total_resumes\": 1,\n  \"average_score\": 81,\n  \"latest_resume\": {\n    \"resume_id\": \"a7c46ff2-78aa-4f38-a23a-0db237b4e3b1\",\n    \"title\": \"My Resume\",\n    \"ats_score\": 81\n  },\n  \"resumes\": [],\n  \"score_trend\": []\n}"
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
             }
           ]
         },
@@ -378,7 +1680,8 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
               },
               {
                 "key": "Accept",
@@ -386,14 +1689,1176 @@
               }
             ],
             "url": "{{base_url}}/analysis/{{resume_id}}",
-            "description": "Show the latest analysis for one resume."
+            "description": "Shows latest analysis for one resume."
           },
-          "response": []
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
         }
       ]
     },
     {
-      "name": "Gateway / External Services",
+      "name": "Recommendations",
+      "item": [
+        {
+          "name": "GET Resume Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/recommendations/resumes/{{resume_id}}",
+            "description": "Returns recommendations based on resume analysis."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "GET Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/jobs",
+            "description": "Lists active internal jobs."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST Create Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/jobs",
+            "description": "Creates an internal job and saves job_id.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Laravel Developer\",\n  \"company\": \"HireSmart Demo Co.\",\n  \"location\": \"Cebu City\",\n  \"description\": \"Build Laravel APIs and integrate third-party services.\",\n  \"required_skills\": [\n    \"PHP\",\n    \"Laravel\",\n    \"MySQL\",\n    \"REST API\",\n    \"Git\"\n  ],\n  \"nice_to_have_skills\": [\n    \"Docker\",\n    \"AWS\"\n  ],\n  \"employment_type\": \"Full-time\",\n  \"experience_level\": \"Mid-level\",\n  \"salary_min\": 35000,\n  \"salary_max\": 70000,\n  \"application_deadline\": \"2026-12-31\",\n  \"is_active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.job && json.job.job_id) pm.environment.set(\"job_id\", json.job.job_id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Show Job",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/jobs/{{job_id}}",
+            "description": "Shows one job with matches."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "PUT Update Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/jobs/{{job_id}}",
+            "description": "Updates an internal job owned by the authenticated recruiter/user.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"salary_max\": 80000,\n  \"required_skills\": [\n    \"PHP\",\n    \"Laravel\",\n    \"MySQL\",\n    \"REST API\",\n    \"Git\",\n    \"Docker\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST Match Job To Resume",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/jobs/{{job_id}}/match",
+            "description": "Matches the selected resume against the selected job.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resume_id\": \"{{resume_id}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "DELETE Job",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/jobs/{{job_id}}",
+            "description": "Deletes an internal job owned by the authenticated user."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Integrations",
+      "item": [
+        {
+          "name": "GET Geocode Address",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/geo/geocode?address=Cebu%20City%20Hall",
+            "description": "Requires GEOAPIFY_API_KEY. Converts address to coordinates."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "400 - Geocoding unavailable",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unable to geocode address. Verify Geoapify API configuration.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET Live Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/jobs/live?what={{search_what}}&where={{search_where}}&origin={{origin}}&radius_km=20&results_per_page=5&sort_by=relevance",
+            "description": "Requires JOOBLE_API_KEY. Origin radius uses Geoapify when origin text is provided."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "200 - Provider key missing",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Live job search completed.\",\n  \"provider\": \"jooble\",\n  \"configured\": false,\n  \"total\": 0,\n  \"jobs\": [],\n  \"provider_message\": \"Jooble API key is not configured.\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "GET Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/notifications",
+            "description": "Returns notification list placeholder."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST Send Notification Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/notifications/email",
+            "description": "Requires Brevo configuration in laravel/.env.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to_email\": \"{{to_email}}\",\n  \"to_name\": \"Test Receiver\",\n  \"subject\": \"New job matches found\",\n  \"message\": \"Hi! We found new roles that match your profile.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "422 - Mail provider missing",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"sendgrid\": [\n      \"Brevo API key is missing.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gateway Routes",
       "item": [
         {
           "name": "GET Gateway Route Map",
@@ -406,8 +2871,28 @@
               }
             ],
             "url": "{{base_url}}/gateway/routes",
-            "description": "Shows which gateway routes point to service groups."
-          }
+            "description": "Shows available gateway-style route groups."
+          },
+          "response": [
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
         },
         {
           "name": "POST Register via Site 1 Gateway",
@@ -423,18 +2908,92 @@
                 "value": "application/json"
               }
             ],
+            "url": "{{base_url}}/site1/register",
+            "description": "Gateway alias for auth register.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+              "raw": "{\n  \"name\": \"Gateway User\",\n  \"email\": \"gateway@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"role\": \"job_seeker\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
+            }
+          },
+          "response": [
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
             },
-            "url": "{{base_url}}/site1/register",
-            "description": "Creates a user through the gateway route for User Service 1."
-          }
+            {
+              "name": "422 - Duplicate email",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"email\": [\n      \"The email has already been taken.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonResponse = pm.response.json();",
+                  "const token = jsonResponse.token || jsonResponse.data?.token || jsonResponse.access_token;",
+                  "if (token) {",
+                  "  pm.environment.set(\"token\", token);",
+                  "  pm.environment.set(\"authToken\", token);",
+                  "  pm.globals.set(\"authToken\", token);",
+                  "  console.log(\"Auth Token:\", token);",
+                  "}"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "POST Login via Site 1 Gateway",
@@ -450,28 +3009,155 @@
                 "value": "application/json"
               }
             ],
+            "url": "{{base_url}}/site1/login",
+            "description": "Gateway alias for auth login.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\"\n}",
+              "raw": "{\n  \"email\": \"gateway@example.com\",\n  \"password\": \"password123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            },
-            "url": "{{base_url}}/site1/login",
-            "description": "Logs in through the gateway route for User Service 1 and saves token."
+            }
           },
+          "response": [
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "422 - Invalid credentials",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"email\": [\n      \"The provided credentials are incorrect.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ],
           "event": [
             {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "const json = pm.response.json();",
-                  "pm.environment.set(\"token\", json.token);"
+                  "const jsonResponse = pm.response.json();",
+                  "const token = jsonResponse.token || jsonResponse.data?.token || jsonResponse.access_token;",
+                  "if (token) {",
+                  "  pm.environment.set(\"token\", token);",
+                  "  pm.environment.set(\"authToken\", token);",
+                  "  pm.globals.set(\"authToken\", token);",
+                  "  console.log(\"Auth Token:\", token);",
+                  "}"
                 ]
               }
+            }
+          ]
+        },
+        {
+          "name": "POST Validate Email via Site 1 Gateway",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/site1/validate-email",
+            "description": "Gateway alias for email validation.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"gateway@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
             }
           ]
         },
@@ -482,7 +3168,8 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
               },
               {
                 "key": "Accept",
@@ -490,8 +3177,64 @@
               }
             ],
             "url": "{{base_url}}/site2/users/profile",
-            "description": "Calls protected User Service 2 profile through the gateway."
-          }
+            "description": "Gateway alias for protected profile."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
         },
         {
           "name": "PUT Update Profile via Site 2 Gateway",
@@ -500,7 +3243,8 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
               },
               {
                 "key": "Accept",
@@ -511,18 +3255,110 @@
                 "value": "application/json"
               }
             ],
+            "url": "{{base_url}}/site2/users/profile",
+            "description": "Gateway alias for profile update.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Updated Test User\",\n  \"phone\": \"09123456789\",\n  \"bio\": \"Testing gateway to external user service.\"\n}",
+              "raw": "{\n  \"name\": \"Updated Gateway User\",\n  \"phone\": \"09123456789\",\n  \"bio\": \"Testing gateway route.\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
+            }
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
             },
-            "url": "{{base_url}}/site2/users/profile",
-            "description": "Updates profile through the gateway route for User Service 2."
-          }
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "404 - Resource not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"No query results for model.\"\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
         },
         {
           "name": "POST Logout via Site 2 Gateway",
@@ -531,7 +3367,8 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{token}}"
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
               },
               {
                 "key": "Accept",
@@ -539,8 +3376,64 @@
               }
             ],
             "url": "{{base_url}}/site2/logout",
-            "description": "Logs out the current token through the gateway route for User Service 2."
-          }
+            "description": "Gateway alias for logout."
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
         }
       ]
     },
@@ -558,24 +3451,19 @@
               },
               {
                 "key": "Content-Type",
-                "value": "application/json"
+                "value": "text/plain"
               }
             ],
+            "url": "{{base_url}}/debug/400",
+            "description": "Guaranteed 400 route when Content-Type is not application/json.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"test@test.com\",\n",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": "{{base_url}}/auth/login",
-            "description": "Send malformed JSON to test a bad request response."
+              "raw": "hello"
+            }
           },
           "response": [
             {
-              "name": "400 - Bad Request",
+              "name": "400 - Bad request",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
@@ -590,7 +3478,43 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"message\": \"Bad request.\"\n}"
+              "body": "{\n  \"message\": \"Bad Request: Content-Type application/json is required.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
             }
           ]
         },
@@ -605,11 +3529,63 @@
               }
             ],
             "url": "{{base_url}}/analysis/dashboard",
-            "description": "Call a protected route without Authorization: Bearer {{token}}."
+            "description": "Call protected route without Authorization header."
           },
           "response": [
             {
-              "name": "401 - Unauthorized",
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "403 Forbidden",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/analyze",
+            "description": "Use another user resume UUID with current token.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resume_id\": \"{{other_user_resume_id}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
@@ -624,19 +3600,51 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"message\": \"Unauthenticated. Login first and send a Bearer token.\"\n}"
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
             }
           ]
         },
         {
-          "name": "403 Forbidden",
+          "name": "422 Validation Error - Login Missing Password",
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
               {
                 "key": "Accept",
                 "value": "application/json"
@@ -646,21 +3654,147 @@
                 "value": "application/json"
               }
             ],
+            "url": "{{base_url}}/auth/login",
+            "description": "Triggers validation error for missing password.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"resume_id\": \"{{other_user_resume_id}}\"\n}",
+              "raw": "{\n  \"email\": \"postman@example.com\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            },
-            "url": "{{base_url}}/analyze",
-            "description": "Use another user's resume ID with your token."
+            }
           },
           "response": [
             {
-              "name": "403 - Forbidden",
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "422 - Invalid credentials",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"email\": [\n      \"The provided credentials are incorrect.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "500 - Server/database/config error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "422 Validation Error - Invalid Resume File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Can also use Bearer {{authToken}} if you follow the global variable setup from the screenshots."
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/resumes/upload",
+            "description": "Attach an invalid file type to test resume validation.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "test",
+                  "type": "text"
+                },
+                {
+                  "key": "resume",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "401 - Missing or invalid token",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "422 - Validation error",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}"
+              },
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
@@ -676,138 +3810,9 @@
                 }
               ],
               "body": "{\n  \"message\": \"Unauthorized\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "422 Validation Error - Missing Password",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"test@test.com\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
             },
-            "url": "{{base_url}}/auth/login",
-            "description": "Laravel validation returns 422 when required JSON fields are missing."
-          },
-          "response": [
             {
-              "name": "422 - Missing Password",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
-              },
-              "status": "Unprocessable Entity",
-              "code": 422,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"success\": false,\n  \"gateway\": \"HireSmart API Gateway\",\n  \"errors\": {\n    \"password\": [\n      \"The password field is required.\"\n    ]\n  }\n}"
-            }
-          ]
-        },
-        {
-          "name": "422 Validation Error - Invalid Resume File",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "title",
-                  "value": "test",
-                  "type": "text"
-                },
-                {
-                  "key": "resume",
-                  "type": "file",
-                  "src": []
-                }
-              ]
-            },
-            "url": "{{base_url}}/resumes/upload",
-            "description": "Attach image.jpg or another invalid file type to test resume validation."
-          },
-          "response": [
-            {
-              "name": "422 - Invalid Resume File",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
-              },
-              "status": "Unprocessable Entity",
-              "code": 422,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"errors\": {\n    \"resume\": [\n      \"The resume field must be a file of type: pdf, docx.\"\n    ]\n  }\n}"
-            }
-          ]
-        },
-        {
-          "name": "500 Internal Server Error",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": "{{base_url}}/auth/login",
-            "description": "Temporarily break DB_PASSWORD in .env, run this request, then restore .env and restart Laravel."
-          },
-          "response": [
-            {
-              "name": "500 - Server Error",
+              "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
                 "header": [],
@@ -822,11 +3827,21 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"message\": \"SQLSTATE[HY000] [1045] Access denied for user...\"\n}"
+              "body": "{\n  \"message\": \"Server error. Check Laravel logs and .env configuration.\"\n}"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  }
 }

@@ -30,8 +30,10 @@ class ApiGateway
                 'folder' => 'microservices/ddsbe',
                 'POST /api/auth/register',
                 'POST /api/auth/login',
+                'POST /api/auth/validate-email',
                 'POST /api/site1/register',
                 'POST /api/site1/login',
+                'POST /api/site1/validate-email',
             ],
             'ddsbe2_user_service_two' => [
                 'folder' => 'microservices/ddsbe2',
@@ -55,6 +57,8 @@ class ApiGateway
             ],
             'job_matching_service' => [
                 'POST /api/jobs/{id}/match',
+                'GET /api/jobs/live',
+                'GET /api/geo/geocode',
             ],
         ];
     }

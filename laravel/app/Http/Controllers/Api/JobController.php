@@ -7,13 +7,19 @@ use App\Models\Job;
 use App\Models\JobMatch;
 use App\Models\Resume;
 use App\Services\AIService;
+use App\Services\GeocodingService;
+use App\Services\JoobleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class JobController extends Controller
 {
-    public function __construct(private AIService $aiService)
+    public function __construct(
+        private AIService $aiService,
+        private JoobleService $joobleService,
+        private GeocodingService $geocodingService
+    )
     {
     }
 
@@ -153,4 +159,114 @@ class JobController extends Controller
             'match' => $match,
         ]);
     }
+
+    public function geocode(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'address' => ['required', 'string', 'max:255'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $geocoded = $this->geocodingService->geocode((string) $validator->validated()['address']);
+        if ($geocoded === null) {
+            return response()->json([
+                'message' => 'Unable to geocode address. Verify Geoapify API configuration.',
+            ], 400);
+        }
+
+        return response()->json([
+            'message' => 'Geocoding successful.',
+            'location' => $geocoded,
+        ]);
+    }
+
+    public function live(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'what' => ['required', 'string', 'max:255'],
+            'where' => ['nullable', 'string', 'max:255'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'page' => ['nullable', 'integer', 'min:1'],
+            'results_per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
+            'radius_km' => ['nullable', 'numeric', 'min:1', 'max:200'],
+            'origin' => ['nullable', 'string', 'max:255'],
+            'origin_lat' => ['nullable', 'numeric', 'between:-90,90'],
+            'origin_lng' => ['nullable', 'numeric', 'between:-180,180'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $filters = $validator->validated();
+        if (! filled($filters['where'] ?? null) && filled($filters['location'] ?? null)) {
+            $filters['where'] = (string) $filters['location'];
+        }
+
+        $liveResult = $this->joobleService->searchJobs($filters);
+        $jobs = collect($liveResult['jobs'] ?? []);
+
+        [$originLat, $originLng, $originLabel] = $this->resolveOriginCoordinates($filters);
+        $radiusKm = isset($filters['radius_km']) ? (float) $filters['radius_km'] : null;
+
+        if ($originLat !== null && $originLng !== null) {
+            $jobs = $jobs->map(function (array $job) use ($originLat, $originLng) {
+                if (is_numeric($job['latitude'] ?? null) && is_numeric($job['longitude'] ?? null)) {
+                    $job['distance_km'] = $this->geocodingService->distanceKm(
+                        $originLat,
+                        $originLng,
+                        (float) $job['latitude'],
+                        (float) $job['longitude']
+                    );
+                }
+
+                return $job;
+            });
+        }
+
+        if ($radiusKm !== null) {
+            $jobs = $jobs->filter(function (array $job) use ($radiusKm) {
+                return isset($job['distance_km']) && (float) $job['distance_km'] <= $radiusKm;
+            })->values();
+        }
+
+        return response()->json([
+            'message' => 'Live job search completed.',
+            'provider' => $liveResult['provider'] ?? 'jooble',
+            'configured' => (bool) ($liveResult['configured'] ?? false),
+            'origin' => [
+                'label' => $originLabel,
+                'latitude' => $originLat,
+                'longitude' => $originLng,
+                'radius_km' => $radiusKm,
+            ],
+            'total' => $jobs->count(),
+            'jobs' => $jobs,
+            'provider_message' => $liveResult['message'] ?? null,
+        ]);
+    }
+
+    private function resolveOriginCoordinates(array $filters): array
+    {
+        $originLat = isset($filters['origin_lat']) ? (float) $filters['origin_lat'] : null;
+        $originLng = isset($filters['origin_lng']) ? (float) $filters['origin_lng'] : null;
+
+        if ($originLat !== null && $originLng !== null) {
+            return [$originLat, $originLng, 'Manual coordinates'];
+        }
+
+        $originAddress = (string) ($filters['origin'] ?? '');
+        if ($originAddress !== '') {
+            $geo = $this->geocodingService->geocode($originAddress);
+            if ($geo !== null) {
+                return [(float) $geo['latitude'], (float) $geo['longitude'], (string) ($geo['formatted_address'] ?? $originAddress)];
+            }
+        }
+
+        return [null, null, null];
+    }
+
 }

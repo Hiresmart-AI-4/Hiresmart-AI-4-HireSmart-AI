@@ -7,10 +7,31 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\RecommendationController;
 use App\Http\Controllers\Api\ResumeController;
 use App\Http\Controllers\Api\UserController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API is working!']);
+});
+
+Route::post('/debug/400', function (Request $request) {
+    if (! $request->isJson()) {
+        return response()->json([
+            'message' => 'Bad Request: Content-Type application/json is required.',
+        ], 400);
+    }
+
+    $rawBody = $request->getContent();
+
+    if ($rawBody !== '' && json_decode($rawBody, true) === null && json_last_error() !== JSON_ERROR_NONE) {
+        return response()->json([
+            'message' => 'Bad Request: malformed JSON body.',
+        ], 400);
+    }
+
+    return response()->json([
+        'message' => 'Request is valid JSON.',
+    ]);
 });
 
 Route::get('/gateway/routes', function (ApiGateway $gateway) {
@@ -21,10 +42,12 @@ Route::get('/gateway/routes', function (ApiGateway $gateway) {
 
 Route::post('/auth/register', [UserController::class, 'register']);
 Route::post('/auth/login', [UserController::class, 'login']);
+Route::post('/auth/validate-email', [UserController::class, 'validateEmail']);
 
 Route::prefix('site1')->group(function () {
     Route::post('/register', [UserController::class, 'register']);
     Route::post('/login', [UserController::class, 'login']);
+    Route::post('/validate-email', [UserController::class, 'validateEmail']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -53,6 +76,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/recommendations/resumes/{resumeId}', [RecommendationController::class, 'resume']);
     Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/email', [NotificationController::class, 'sendEmail']);
+
+    Route::get('/geo/geocode', [JobController::class, 'geocode']);
+    Route::get('/jobs/live', [JobController::class, 'live']);
 
     Route::get('/jobs', [JobController::class, 'index']);
     Route::post('/jobs', [JobController::class, 'store']);

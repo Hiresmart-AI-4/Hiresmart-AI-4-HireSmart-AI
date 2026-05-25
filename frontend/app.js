@@ -128,6 +128,87 @@ function cleanHtmlError(value) {
     return text.length > 240 ? `${text.slice(0, 240)}...` : text;
 }
 
+function firstPresent(...values) {
+    return values.find((value) => value !== undefined && value !== null && value !== '');
+}
+
+function normalizeResume(uploadResponse) {
+    const nestedResume = findResumeLike(uploadResponse);
+    if (nestedResume) {
+        return nestedResume;
+    }
+
+    const candidate = firstPresent(
+        uploadResponse?.resume,
+        uploadResponse?.data?.resume,
+        uploadResponse?.data,
+        uploadResponse
+    );
+
+    const resumeId = firstPresent(
+        candidate?.resume_id,
+        candidate?.id,
+        uploadResponse?.resume_id,
+        uploadResponse?.data?.resume_id,
+        uploadResponse?.data?.id
+    );
+
+    return resumeId ? { ...candidate, resume_id: resumeId } : null;
+}
+
+function findResumeLike(value) {
+    if (!value || typeof value !== 'object') {
+        return null;
+    }
+
+    if (!Array.isArray(value)) {
+        const resumeId = firstPresent(value.resume_id, value.id);
+        const looksLikeResume = resumeId && (
+            value.original_filename ||
+            value.file_url ||
+            value.file_type ||
+            value.parsed_data ||
+            value.ats_score !== undefined
+        );
+
+        if (looksLikeResume) {
+            return { ...value, resume_id: resumeId };
+        }
+    }
+
+    const children = Array.isArray(value) ? value : Object.values(value);
+    for (const child of children) {
+        const found = findResumeLike(child);
+        if (found) {
+            return found;
+        }
+    }
+
+    return null;
+}
+
+function normalizeAnalysis(analysisResponse) {
+    return firstPresent(
+        analysisResponse?.analysis,
+        analysisResponse?.data?.analysis,
+        analysisResponse?.data,
+        analysisResponse
+    );
+}
+
+function describeResponseShape(response) {
+    if (!response || typeof response !== 'object') {
+        return typeof response;
+    }
+
+    const keys = Object.keys(response);
+    const nested = response.data && typeof response.data === 'object'
+        ? ` data keys: ${Object.keys(response.data).join(', ') || 'none'}.`
+        : '';
+
+    return `top-level keys: ${keys.join(', ') || 'none'}.${nested}`;
+}
+
 function initLogin() {
     const form = document.getElementById('loginForm');
     if (!form) {
@@ -240,20 +321,27 @@ function initUpload() {
                 body: formData,
             });
 
+            const uploadedResume = normalizeResume(upload);
+            if (!uploadedResume) {
+                throw new Error(`Resume upload finished, but the API did not return a resume_id (${describeResponseShape(upload)})`);
+            }
+
             setMessage('Checking resume against ATS signals...');
             const jobDescription = document.getElementById('jobDescription').value.trim();
             const analysis = await apiRequest('/analyze', {
                 method: 'POST',
                 body: {
-                    resume_id: upload.resume.resume_id,
+                    resume_id: uploadedResume.resume_id,
                     job_description: jobDescription || null,
                 },
             });
 
+            const analysisResult = normalizeAnalysis(analysis);
+            const recommendations = analysis.recommendations || analysis.data?.recommendations || [];
             const result = {
-                resume: upload.resume,
-                analysis: analysis.analysis,
-                recommendations: analysis.recommendations || [],
+                resume: uploadedResume,
+                analysis: analysisResult,
+                recommendations,
             };
 
             localStorage.setItem(LAST_RESULT_KEY, JSON.stringify(result));

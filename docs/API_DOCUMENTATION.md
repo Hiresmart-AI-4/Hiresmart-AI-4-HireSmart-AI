@@ -1,375 +1,205 @@
-# HireSmart APIs
+# HireSmart AI Postman Documentation
 
-Postman documentation for the HireSmart AI Laravel API, organized in the same collection style as the PayPal/Postman reference.
+This file documents the Laravel API that Postman should call. Third-party keys in `laravel/.env` are used by the backend automatically; do not paste those provider keys into Postman requests.
 
-## Base URL
+## Local Setup
+
+```powershell
+cd laravel
+php artisan config:clear
+php artisan migrate
+php artisan serve --host=127.0.0.1 --port=8000
+```
+
+Base URL:
 
 ```text
 http://127.0.0.1:8000/api
 ```
 
-## Postman Environment Variables
+## Postman Environment
 
-| Variable | Value |
+Create an environment with these variables:
+
+| Variable | Example |
 | --- | --- |
 | `base_url` | `http://127.0.0.1:8000/api` |
-| `token` | Paste the token returned by Register or Login |
-| `resume_id` | Paste the UUID returned by Upload Resume |
-| `job_id` | Paste a job UUID when testing job matching |
+| `token` | Saved automatically from Register/Login |
+| `user_email` | `postman@example.com` |
+| `resume_id` | Saved from Upload Resume |
+| `analysis_resume_id` | Usually same as `resume_id` |
+| `job_id` | Saved from Create Job |
+| `other_user_resume_id` | Optional for 403 testing |
+| `search_what` | `Laravel Developer` |
+| `search_where` | `Cebu` |
+| `origin` | `Cebu City Hall` |
+| `to_email` | `receiver@example.com` |
+| `authToken` | Optional global-style token used in some Postman screenshots |
+
+Common headers:
+
+```http
+Accept: application/json
+Content-Type: application/json
+```
+
+Protected routes also need:
+
+```http
+Authorization: Bearer {{token}}
+```
+
+## Postman Setup From The Photos
+
+Use this setup when you want the collection to behave like the screenshots.
+
+### Collection folders
+
+Organize requests by feature folder:
+
+```text
+HireSmart APIs
+|-- Auth
+|   |-- POST Login
+|   |-- POST Register
+|   |-- POST Validate Email
+|-- Profile
+|-- Resume
+|-- Analysis
+|-- Jobs
+|-- Integrations
+|-- Notifications
+|-- Gateway Routes
+|-- Error Handling
+```
+
+### Collection-level Authorization
+
+In the parent collection or protected folder:
+
+```text
+Authorization tab
+Type: Bearer Token
+Token: {{token}}
+```
+
+If your Postman workspace uses the global variable from the photo, use this instead:
+
+```text
+Token: {{authToken}}
+```
+
+For child requests, set:
+
+```text
+Authorization tab
+Type: Inherit auth from parent
+```
+
+### Where To Find `Inherit auth from parent`
+
+Use this when you are inside a single request such as `GET Profile`, `POST Upload Resume`, `POST Analyze Resume`, or `POST Create Job`.
+
+1. Click the request in the left sidebar.
+2. Click the **Authorization** tab beside **Params**.
+3. Find the **Auth Type** dropdown.
+4. Select **Inherit auth from parent**.
+5. Save the request.
+
+You should see options like:
+
+```text
+No Auth
+API Key
+Bearer Token
+Basic Auth
+Inherit auth from parent
+```
+
+The parent collection or folder must have the actual token:
+
+```text
+Parent collection/folder > Authorization tab
+Type: Bearer Token
+Token: {{token}}
+```
+
+Quick rule:
+
+```text
+Parent collection/folder = Bearer Token {{token}}
+Child requests = Inherit auth from parent
+```
+
+### Login/Register Post-response Script
+
+Add this in the `Scripts` tab under `Post-response` for `POST Login`, `POST Register`, `POST Login via Site 1 Gateway`, and `POST Register via Site 1 Gateway`.
+
+```js
+const jsonResponse = pm.response.json();
+const token = jsonResponse.token || jsonResponse.data?.token || jsonResponse.access_token;
+
+if (token) {
+  pm.environment.set("token", token);
+  pm.environment.set("authToken", token);
+  pm.globals.set("authToken", token);
+  console.log("Auth Token:", token);
+}
+```
+
+This supports both response styles:
+
+```json
+{
+  "token": "1|xxxxxxxx"
+}
+```
+
+and:
+
+```json
+{
+  "data": {
+    "token": "1|xxxxxxxx"
+  }
+}
+```
+
+## External API Keys In `.env`
+
+| Keys | Used by | Postman route to test |
+| --- | --- | --- |
+| `OPENAI_API_KEY` | Reserved for AI features, but the current `AIService.php` uses local keyword matching and does not call OpenAI yet. | `POST /analyze` still works without OpenAI. |
+| `JOOBLE_API_KEY` | Live job search. | `GET /jobs/live` |
+| `GEOAPIFY_API_KEY` | Address to latitude/longitude and radius filtering. | `GET /geo/geocode`, `GET /jobs/live` with `origin` |
+| `MAILBOXLAYER_API_KEY` | Email validation. | `POST /auth/validate-email`, `POST /auth/register` |
+| `BREVO_API_KEY` | Email notification sending. | `POST /notifications/email` |
+
+If an integration key is missing, the API either returns a clear validation/configuration message or skips/falls back depending on the service.
 
 ## Collection Folder Structure
 
 ```text
 HireSmart APIs
- ├── Authorization
- │    ├── POST Register
- │    ├── POST Login
- │
- ├── Resume
- │    ├── POST Upload Resume
- │    ├── GET List Resumes
- │    ├── GET Show Resume
- │    ├── DELETE Delete Resume
- │
- ├── Analysis
- │    ├── POST Analyze Resume
- │    ├── GET Dashboard
- │    ├── GET Show Analysis
- │
- ├── Gateway / External Services
- │    ├── GET Gateway Route Map
- │    ├── POST Register via Site 1 Gateway
- │    ├── POST Login via Site 1 Gateway
- │    ├── GET Profile via Site 2 Gateway
- │    ├── PUT Update Profile via Site 2 Gateway
- │    ├── POST Logout via Site 2 Gateway
- │
- ├── Error Handling
- │    ├── 400 Bad Request
- │    ├── 401 Unauthorized
- │    ├── 403 Forbidden
- │    ├── 422 Validation Error
- │    ├── 500 Internal Server Error
+|-- Health
+|-- Auth
+|-- Profile
+|-- Resume
+|-- Analysis
+|-- Recommendations
+|-- Jobs
+|-- Integrations
+|-- Notifications
+|-- Gateway Routes
+|-- Error Handling
 ```
 
-## Authorization
+## Health
 
-### POST Register
-
-Creates a new user and returns a Bearer token.
-
-**URL**
+### GET Test
 
 ```http
-POST http://127.0.0.1:8000/api/auth/register
-```
-
-**Headers**
-
-```http
-Accept: application/json
-Content-Type: application/json
-```
-
-**Body JSON**
-
-```json
-{
-  "name": "Test User",
-  "email": "test@test.com",
-  "password": "password123",
-  "password_confirmation": "password123"
-}
-```
-
-**Expected `201 Created`**
-
-```json
-{
-  "success": true,
-  "gateway": "HireSmart API Gateway",
-  "message": "User registered successfully",
-  "token": "1|xxxxxxxxxxxx"
-}
-```
-
-**Postman step**
-
-Copy `token` into the `token` environment variable.
-
-### POST Login
-
-Logs in an existing user and returns a Bearer token.
-
-**URL**
-
-```http
-POST http://127.0.0.1:8000/api/auth/login
-```
-
-**Headers**
-
-```http
-Accept: application/json
-Content-Type: application/json
-```
-
-**Body JSON**
-
-```json
-{
-  "email": "test@test.com",
-  "password": "password123"
-}
-```
-
-**Expected `200 OK`**
-
-```json
-{
-  "success": true,
-  "gateway": "HireSmart API Gateway",
-  "message": "Login successful",
-  "token": "1|xxxxxxxxxxxx"
-}
-```
-
-**Postman step**
-
-Copy `token` into the `token` environment variable.
-
-## Resume
-
-### POST Upload Resume
-
-Uploads a PDF or DOCX resume and creates a resume record. This endpoint requires a Bearer token.
-
-**URL**
-
-```http
-POST http://127.0.0.1:8000/api/resumes/upload
-```
-
-**Headers**
-
-```http
-Authorization: Bearer {{token}}
-Accept: application/json
-```
-
-**Body: form-data**
-
-| Key | Type | Example |
-| --- | --- | --- |
-| `title` | Text | `My Resume` |
-| `resume` | File | Select a `.pdf` or `.docx` file |
-
-**Expected `201 Created`**
-
-```json
-{
-  "message": "Resume uploaded successfully",
-  "resume": {
-    "resume_id": "a7c46ff2-78aa-4f38-a23a-0db237b4e3b1",
-    "title": "My Resume",
-    "original_filename": "resume.pdf",
-    "file_type": "pdf",
-    "ats_score": null
-  }
-}
-```
-
-**Postman step**
-
-Copy `resume.resume_id` into the `resume_id` environment variable.
-
-### GET List Resumes
-
-Lists all resumes owned by the logged-in user.
-
-**URL**
-
-```http
-GET http://127.0.0.1:8000/api/resumes
-```
-
-**Headers**
-
-```http
-Authorization: Bearer {{token}}
-Accept: application/json
-```
-
-**Expected `200 OK`**
-
-```json
-[
-  {
-    "resume_id": "a7c46ff2-78aa-4f38-a23a-0db237b4e3b1",
-    "title": "My Resume",
-    "original_filename": "resume.pdf",
-    "ats_score": 81
-  }
-]
-```
-
-### GET Show Resume
-
-Shows one resume, including the latest analysis and uploaded versions.
-
-**URL**
-
-```http
-GET http://127.0.0.1:8000/api/resumes/{{resume_id}}
-```
-
-**Headers**
-
-```http
-Authorization: Bearer {{token}}
-Accept: application/json
-```
-
-### DELETE Delete Resume
-
-Deletes one resume owned by the logged-in user.
-
-**URL**
-
-```http
-DELETE http://127.0.0.1:8000/api/resumes/{{resume_id}}
-```
-
-**Headers**
-
-```http
-Authorization: Bearer {{token}}
-Accept: application/json
-```
-
-**Expected `200 OK`**
-
-```json
-{
-  "message": "Resume deleted successfully"
-}
-```
-
-## Analysis
-
-### POST Analyze Resume
-
-Runs the ATS-style resume analysis. The `resume_id` must be the UUID from Upload Resume, not `1`.
-
-**URL**
-
-```http
-POST http://127.0.0.1:8000/api/analyze
-```
-
-**Headers**
-
-```http
-Authorization: Bearer {{token}}
-Accept: application/json
-Content-Type: application/json
-```
-
-**Body JSON**
-
-```json
-{
-  "resume_id": "{{resume_id}}",
-  "job_description": "Generalist role with communication, problem solving, and project management."
-}
-```
-
-**Expected `200 OK`**
-
-```json
-{
-  "message": "Analysis complete",
-  "analysis": {
-    "resume_id": "a7c46ff2-78aa-4f38-a23a-0db237b4e3b1",
-    "total_score": 81,
-    "strengths": [
-      "Clear professional profile",
-      "Relevant skills are easy to scan",
-      "Readable resume structure"
-    ],
-    "weaknesses": [
-      "Could include more measurable achievements",
-      "Could include more job-specific keywords"
-    ],
-    "missing_keywords": [
-      "project",
-      "management"
-    ],
-    "summary": "Your resume is ready for baseline screening. Improve it further by adding measurable outcomes and matching more job keywords."
-  },
-  "recommendations": [
-    "project",
-    "management"
-  ]
-}
-```
-
-### GET Dashboard
-
-Returns dashboard metrics, resume list, and score trend.
-
-**URL**
-
-```http
-GET http://127.0.0.1:8000/api/analysis/dashboard
-```
-
-**Headers**
-
-```http
-Authorization: Bearer {{token}}
-Accept: application/json
-```
-
-**Expected `200 OK`**
-
-```json
-{
-  "total_resumes": 1,
-  "average_score": 81,
-  "latest_resume": {
-    "resume_id": "a7c46ff2-78aa-4f38-a23a-0db237b4e3b1",
-    "title": "My Resume",
-    "ats_score": 81
-  },
-  "resumes": [],
-  "score_trend": []
-}
-```
-
-### GET Show Analysis
-
-Shows the latest analysis for one resume.
-
-**URL**
-
-```http
-GET http://127.0.0.1:8000/api/analysis/{{resume_id}}
-```
-
-**Headers**
-
-```http
-Authorization: Bearer {{token}}
-Accept: application/json
-```
-
-## Extra Useful URLs
-
-### GET API Health Check
-
-```http
-GET http://127.0.0.1:8000/api/test
+GET {{base_url}}/test
 ```
 
 Expected:
@@ -383,352 +213,392 @@ Expected:
 ### GET Ping
 
 ```http
-GET http://127.0.0.1:8000/api/ping
+GET {{base_url}}/ping
 ```
 
-Expected:
+## Auth
+
+### POST Register
+
+```http
+POST {{base_url}}/auth/register
+```
 
 ```json
 {
-  "message": "pong",
-  "timestamp": "2026-05-16T00:00:00.000000Z"
-}
-```
-
-### GET Gateway Routes
-
-```http
-GET http://127.0.0.1:8000/api/gateway/routes
-```
-
-Expected:
-
-```json
-{
-  "success": true,
-  "gateway": "HireSmart API Gateway",
-  "routes": {}
-}
-```
-
-## Gateway / External Services
-
-Use this folder to prove that Postman is calling the gateway-style URLs instead of calling the direct auth/profile URLs. In this Laravel implementation, the `/api/site1/*` routes represent User Service 1 and the `/api/site2/*` routes represent User Service 2 behind the gateway.
-
-### GET Gateway Route Map
-
-Shows which gateway routes point to which backend service group.
-
-**URL**
-
-```http
-GET http://127.0.0.1:8000/api/gateway/routes
-```
-
-**Headers**
-
-```http
-Accept: application/json
-```
-
-**Expected `200 OK`**
-
-```json
-{
-  "success": true,
-  "gateway": "HireSmart API Gateway",
-  "routes": {
-    "ddsbe_user_service_one": {
-      "folder": "microservices/ddsbe"
-    },
-    "ddsbe2_user_service_two": {
-      "folder": "microservices/ddsbe2"
-    },
-    "ddsgateway": {
-      "folder": "microservices/ddsgateway"
-    }
-  }
-}
-```
-
-### POST Register via Site 1 Gateway
-
-Creates a user through the gateway route for User Service 1.
-
-**URL**
-
-```http
-POST http://127.0.0.1:8000/api/site1/register
-```
-
-**Headers**
-
-```http
-Accept: application/json
-Content-Type: application/json
-```
-
-**Body JSON**
-
-```json
-{
-  "name": "Test User",
-  "email": "test@test.com",
+  "name": "Postman User",
+  "email": "{{user_email}}",
   "password": "password123",
-  "password_confirmation": "password123"
+  "password_confirmation": "password123",
+  "role": "job_seeker"
 }
 ```
 
-**Expected `201 Created`**
+Postman Tests:
+
+```js
+const json = pm.response.json();
+if (json.token) pm.environment.set("token", json.token);
+```
+
+### POST Login
+
+```http
+POST {{base_url}}/auth/login
+```
 
 ```json
 {
-  "success": true,
-  "gateway": "HireSmart API Gateway",
-  "message": "User registered successfully",
-  "token": "1|xxxxxxxxxxxx"
-}
-```
-
-### POST Login via Site 1 Gateway
-
-Logs in through the gateway route for User Service 1.
-
-**URL**
-
-```http
-POST http://127.0.0.1:8000/api/site1/login
-```
-
-**Headers**
-
-```http
-Accept: application/json
-Content-Type: application/json
-```
-
-**Body JSON**
-
-```json
-{
-  "email": "test@test.com",
+  "email": "{{user_email}}",
   "password": "password123"
 }
 ```
 
-**Expected `200 OK`**
-
-```json
-{
-  "success": true,
-  "gateway": "HireSmart API Gateway",
-  "message": "Login successful",
-  "token": "1|xxxxxxxxxxxx"
-}
-```
-
-**Postman Tests script**
+Postman Tests:
 
 ```js
 const json = pm.response.json();
-pm.environment.set("token", json.token);
+if (json.token) pm.environment.set("token", json.token);
 ```
 
-### GET Profile via Site 2 Gateway
-
-Calls the protected User Service 2 profile route through the gateway.
-
-**URL**
+### POST Validate Email
 
 ```http
-GET http://127.0.0.1:8000/api/site2/users/profile
+POST {{base_url}}/auth/validate-email
 ```
-
-**Headers**
-
-```http
-Accept: application/json
-Authorization: Bearer {{token}}
-```
-
-**Expected `200 OK`**
 
 ```json
 {
-  "success": true,
-  "gateway": "HireSmart API Gateway",
-  "user": {
-    "id": 1,
-    "name": "Test User",
-    "email": "test@test.com"
+  "email": "candidate@example.com"
+}
+```
+
+## Profile
+
+### GET Profile
+
+```http
+GET {{base_url}}/users/profile
+Authorization: Bearer {{token}}
+```
+
+### PUT Update Profile
+
+```http
+PUT {{base_url}}/users/profile
+Authorization: Bearer {{token}}
+```
+
+```json
+{
+  "name": "Updated Postman User",
+  "phone": "09123456789",
+  "bio": "Testing HireSmart AI API from Postman.",
+  "preferences": {
+    "location": "Cebu",
+    "remote": true
   }
 }
 ```
 
-### PUT Update Profile via Site 2 Gateway
-
-Updates the authenticated user profile through the gateway route for User Service 2.
-
-**URL**
+### POST Logout
 
 ```http
-PUT http://127.0.0.1:8000/api/site2/users/profile
-```
-
-**Headers**
-
-```http
-Accept: application/json
-Content-Type: application/json
+POST {{base_url}}/auth/logout
 Authorization: Bearer {{token}}
 ```
 
-**Body JSON**
+## Resume
 
-```json
-{
-  "name": "Updated Test User",
-  "phone": "09123456789",
-  "bio": "Testing gateway to external user service."
-}
-```
-
-**Expected `200 OK`**
-
-```json
-{
-  "success": true,
-  "gateway": "HireSmart API Gateway",
-  "message": "Profile updated"
-}
-```
-
-### POST Logout via Site 2 Gateway
-
-Logs out the current token through the gateway route for User Service 2.
-
-**URL**
+### POST Upload Resume
 
 ```http
-POST http://127.0.0.1:8000/api/site2/logout
-```
-
-**Headers**
-
-```http
-Accept: application/json
+POST {{base_url}}/resumes/upload
 Authorization: Bearer {{token}}
 ```
 
-**Expected `200 OK`**
+Body type: `form-data`
 
-```json
-{
-  "success": true,
-  "gateway": "HireSmart API Gateway",
-  "message": "Logged out successfully"
+| Key | Type | Value |
+| --- | --- | --- |
+| `title` | Text | `My Resume` |
+| `resume` | File | Select `.pdf` or `.docx` |
+
+Postman Tests:
+
+```js
+const json = pm.response.json();
+if (json.resume?.resume_id) {
+  pm.environment.set("resume_id", json.resume.resume_id);
+  pm.environment.set("analysis_resume_id", json.resume.resume_id);
 }
 ```
 
-### Successful Gateway Test Checklist
+### GET List Resumes
 
-1. Start MySQL.
-2. Run `php artisan migrate` inside the `laravel` folder.
-3. Run `php artisan serve --host=127.0.0.1 --port=8000`.
-4. In Postman, call `Gateway / External Services / POST Register via Site 1 Gateway`.
-5. Call `Gateway / External Services / POST Login via Site 1 Gateway`.
-6. Save the returned token to `{{token}}`.
-7. Call `Gateway / External Services / GET Profile via Site 2 Gateway`.
+```http
+GET {{base_url}}/resumes
+Authorization: Bearer {{token}}
+```
 
-The proof is the route path: use `/api/site1/login`, not `/api/auth/login`, when demonstrating the gateway/external-service call.
+### GET Show Resume
+
+```http
+GET {{base_url}}/resumes/{{resume_id}}
+Authorization: Bearer {{token}}
+```
+
+### PUT Update Resume
+
+```http
+PUT {{base_url}}/resumes/{{resume_id}}
+Authorization: Bearer {{token}}
+```
+
+```json
+{
+  "title": "Updated Resume Title",
+  "is_active": true
+}
+```
+
+### POST Activate Resume
+
+```http
+POST {{base_url}}/resumes/{{resume_id}}/activate
+Authorization: Bearer {{token}}
+```
+
+### GET Download Resume URL
+
+```http
+GET {{base_url}}/resumes/{{resume_id}}/download
+Authorization: Bearer {{token}}
+```
+
+### GET Compare Resumes
+
+```http
+GET {{base_url}}/resumes/compare/{{resume_id}}/{{analysis_resume_id}}
+Authorization: Bearer {{token}}
+```
+
+### DELETE Resume
+
+```http
+DELETE {{base_url}}/resumes/{{resume_id}}
+Authorization: Bearer {{token}}
+```
+
+## Analysis
+
+### POST Analyze Resume
+
+```http
+POST {{base_url}}/analyze
+Authorization: Bearer {{token}}
+```
+
+```json
+{
+  "resume_id": "{{resume_id}}",
+  "job_description": "Laravel developer with PHP, MySQL, REST API, Git, Docker, communication, and problem solving."
+}
+```
+
+### GET Analysis Dashboard
+
+```http
+GET {{base_url}}/analysis/dashboard
+Authorization: Bearer {{token}}
+```
+
+### GET Show Analysis
+
+```http
+GET {{base_url}}/analysis/{{resume_id}}
+Authorization: Bearer {{token}}
+```
+
+## Recommendations
+
+### GET Resume Recommendations
+
+```http
+GET {{base_url}}/recommendations/resumes/{{resume_id}}
+Authorization: Bearer {{token}}
+```
+
+## Jobs
+
+### GET Jobs
+
+```http
+GET {{base_url}}/jobs
+Authorization: Bearer {{token}}
+```
+
+### POST Create Job
+
+```http
+POST {{base_url}}/jobs
+Authorization: Bearer {{token}}
+```
+
+```json
+{
+  "title": "Laravel Developer",
+  "company": "HireSmart Demo Co.",
+  "location": "Cebu City",
+  "description": "Build Laravel APIs and integrate third-party services.",
+  "required_skills": ["PHP", "Laravel", "MySQL", "REST API", "Git"],
+  "nice_to_have_skills": ["Docker", "AWS"],
+  "employment_type": "Full-time",
+  "experience_level": "Mid-level",
+  "salary_min": 35000,
+  "salary_max": 70000,
+  "application_deadline": "2026-12-31",
+  "is_active": true
+}
+```
+
+Postman Tests:
+
+```js
+const json = pm.response.json();
+if (json.job?.job_id) pm.environment.set("job_id", json.job.job_id);
+```
+
+### GET Show Job
+
+```http
+GET {{base_url}}/jobs/{{job_id}}
+Authorization: Bearer {{token}}
+```
+
+### PUT Update Job
+
+```http
+PUT {{base_url}}/jobs/{{job_id}}
+Authorization: Bearer {{token}}
+```
+
+```json
+{
+  "salary_max": 80000,
+  "required_skills": ["PHP", "Laravel", "MySQL", "REST API", "Git", "Docker"]
+}
+```
+
+### POST Match Job To Resume
+
+```http
+POST {{base_url}}/jobs/{{job_id}}/match
+Authorization: Bearer {{token}}
+```
+
+```json
+{
+  "resume_id": "{{resume_id}}"
+}
+```
+
+### DELETE Job
+
+```http
+DELETE {{base_url}}/jobs/{{job_id}}
+Authorization: Bearer {{token}}
+```
+
+## Integrations
+
+### GET Geocode Address
+
+Requires `GEOAPIFY_API_KEY`.
+
+```http
+GET {{base_url}}/geo/geocode?address=Cebu%20City%20Hall
+Authorization: Bearer {{token}}
+```
+
+### GET Live Jobs
+
+Requires `JOOBLE_API_KEY`. Distance fields require job coordinates from Jooble and either `origin`, or `origin_lat` plus `origin_lng`.
+
+```http
+GET {{base_url}}/jobs/live?what={{search_what}}&where={{search_where}}&origin={{origin}}&radius_km=20&results_per_page=5&sort_by=relevance
+Authorization: Bearer {{token}}
+```
+
+## Notifications
+
+### GET Notifications
+
+```http
+GET {{base_url}}/notifications
+Authorization: Bearer {{token}}
+```
+
+### POST Send Notification Email
+
+Requires `BREVO_API_KEY`.
+
+```http
+POST {{base_url}}/notifications/email
+Authorization: Bearer {{token}}
+```
+
+```json
+{
+  "to_email": "{{to_email}}",
+  "to_name": "Test Receiver",
+  "subject": "New job matches found",
+  "message": "Hi! We found new roles that match your profile."
+}
+```
+
+## Gateway Routes
+
+The project also exposes gateway-style aliases:
+
+| Direct route | Gateway route |
+| --- | --- |
+| `POST /auth/register` | `POST /site1/register` |
+| `POST /auth/login` | `POST /site1/login` |
+| `POST /auth/validate-email` | `POST /site1/validate-email` |
+| `GET /users/profile` | `GET /site2/users/profile` |
+| `PUT /users/profile` | `PUT /site2/users/profile` |
+| `POST /auth/logout` | `POST /site2/logout` |
+
+Route map:
+
+```http
+GET {{base_url}}/gateway/routes
+```
 
 ## Error Handling
 
-Create these examples inside the `Error Handling` folder, like the PayPal collection reference.
+Each request in the Postman collection now includes response examples where applicable. Use this matrix as the quick guide.
 
-### 400 Bad Request
+### Common Error Response Examples
 
-Use malformed JSON to test a bad request.
-
-**URL**
-
-```http
-POST http://127.0.0.1:8000/api/auth/login
-```
-
-**Headers**
-
-```http
-Accept: application/json
-Content-Type: application/json
-```
-
-**Wrong Body**
+**400 Bad Request**
 
 ```json
 {
-  "email": "test@test.com",
-```
-
-**Expected**
-
-```json
-{
-  "message": "Bad request."
+  "message": "Bad Request: Content-Type application/json is required."
 }
 ```
 
-### 401 Unauthorized
-
-Call a protected route without a Bearer token.
-
-**URL**
-
-```http
-GET http://127.0.0.1:8000/api/analysis/dashboard
-```
-
-**Headers**
-
-```http
-Accept: application/json
-```
-
-**Expected**
+**401 Unauthorized**
 
 ```json
 {
-  "message": "Unauthenticated. Login first and send a Bearer token."
+  "message": "Unauthenticated."
 }
 ```
 
-### 403 Forbidden
-
-Use another user's resume ID with your token.
-
-**URL**
-
-```http
-POST http://127.0.0.1:8000/api/analyze
-```
-
-**Headers**
-
-```http
-Authorization: Bearer {{token}}
-Accept: application/json
-Content-Type: application/json
-```
-
-**Body JSON**
-
-```json
-{
-  "resume_id": "{{other_user_resume_id}}"
-}
-```
-
-**Expected**
+**403 Forbidden**
 
 ```json
 {
@@ -736,117 +606,132 @@ Content-Type: application/json
 }
 ```
 
-### 422 Validation Error: Missing Password
-
-Laravel validation returns `422` for missing fields.
-
-**URL**
-
-```http
-POST http://127.0.0.1:8000/api/auth/login
-```
-
-**Headers**
-
-```http
-Accept: application/json
-Content-Type: application/json
-```
-
-**Wrong Body**
+**404 Not Found**
 
 ```json
 {
-  "email": "test@test.com"
+  "message": "No query results for model."
 }
 ```
 
-**Expected**
+**422 Validation Error**
 
 ```json
 {
-  "success": false,
-  "gateway": "HireSmart API Gateway",
   "errors": {
-    "password": [
-      "The password field is required."
+    "field": [
+      "The field is required or invalid."
     ]
   }
 }
 ```
 
-### 422 Validation Error: Invalid Resume File
+**500 Server Error**
 
-Upload an invalid file type.
-
-**URL**
-
-```http
-POST http://127.0.0.1:8000/api/resumes/upload
+```json
+{
+  "message": "Server error. Check Laravel logs and .env configuration."
+}
 ```
 
-**Headers**
+### Error Examples Per Request
 
-```http
-Authorization: Bearer {{token}}
-Accept: application/json
-```
-
-**Body: form-data**
-
-| Key | Type | Example |
+| Folder | Request | Error examples to test |
 | --- | --- | --- |
-| `title` | Text | `test` |
-| `resume` | File | `image.jpg` |
+| Health | `GET /test`, `GET /ping` | `404` if wrong URL, `500` if Laravel server has config/runtime issue |
+| Auth | `POST /auth/register` | `422` missing fields, invalid email, duplicate email, weak password; `500` DB/config issue |
+| Auth | `POST /auth/login` | `422` missing password/email or wrong credentials; `500` DB/config issue |
+| Auth | `POST /auth/validate-email` | `422` invalid email; provider result may be `skipped` if API key is missing |
+| Profile | `GET /users/profile` | `401` missing/expired token |
+| Profile | `PUT /users/profile` | `401` missing token; `422` invalid name/phone/preferences |
+| Profile | `POST /auth/logout` | `401` missing/expired token |
+| Resume | `POST /resumes/upload` | `401` missing token; `422` missing title, missing file, invalid file type, file too large; `500` storage/parser issue |
+| Resume | `GET /resumes` | `401` missing token |
+| Resume | `GET /resumes/{id}` | `401` missing token; `403` another user's resume; `404` resume UUID not found |
+| Resume | `PUT /resumes/{id}` | `401`; `403`; `404`; `422` invalid title or `is_active` |
+| Resume | `DELETE /resumes/{id}` | `401`; `403`; `404`; `500` file storage delete issue |
+| Resume | `POST /resumes/{id}/activate` | `401`; `403`; `404` |
+| Resume | `GET /resumes/{id}/download` | `401`; `403`; `404` |
+| Resume | `GET /resumes/compare/{originalId}/{improvedId}` | `401`; `403` if either resume belongs to another user; `404` if either UUID is missing |
+| Analysis | `POST /analyze` | `401`; `403`; `422` missing/invalid `resume_id`; `404` resume missing |
+| Analysis | `GET /analysis/dashboard` | `401` missing token |
+| Analysis | `GET /analysis/{resumeId}` | `401`; `403`; `404` no analysis found |
+| Recommendations | `GET /recommendations/resumes/{resumeId}` | `401`; `403`; `404` resume missing |
+| Jobs | `GET /jobs` | `401` missing token |
+| Jobs | `POST /jobs` | `401`; `422` missing title/company/location/description/skills/employment fields |
+| Jobs | `GET /jobs/{id}` | `401`; `404` job UUID missing |
+| Jobs | `PUT /jobs/{id}` | `401`; `403` not recruiter/owner; `404`; `422` invalid update fields |
+| Jobs | `DELETE /jobs/{id}` | `401`; `403`; `404` |
+| Jobs | `POST /jobs/{id}/match` | `401`; `403` resume owner mismatch; `404`; `422` missing/invalid `resume_id` |
+| Integrations | `GET /geo/geocode` | `401`; `422` missing `address`; `400` unable to geocode or Geoapify key/config missing |
+| Integrations | `GET /jobs/live` | `401`; `422` invalid query/radius fields; `200` with `configured:false` if Jooble key is missing |
+| Notifications | `GET /notifications` | `401` missing token |
+| Notifications | `POST /notifications/email` | `401`; `422` invalid email/subject/message or missing Brevo key |
+| Gateway Routes | `/site1/*`, `/site2/*` | Same errors as their direct Auth/Profile equivalents |
+| Error Handling | `POST /debug/400` | `400` when `Content-Type` is not `application/json` or JSON is malformed |
 
-**Expected**
-
-```json
-{
-  "errors": {
-    "resume": [
-      "The resume field must be a file of type: pdf, docx."
-    ]
-  }
-}
-```
-
-### 500 Internal Server Error
-
-Use only for testing, then restore immediately.
-
-**Temporary test setup**
-
-```env
-DB_PASSWORD=wrongpassword
-```
-
-Then call:
+### 400 Bad Request
 
 ```http
-POST http://127.0.0.1:8000/api/auth/login
+POST {{base_url}}/debug/400
+Content-Type: text/plain
 ```
 
-**Expected**
+Body:
+
+```text
+hello
+```
+
+### 401 Unauthorized
+
+Call any protected route without `Authorization`.
+
+```http
+GET {{base_url}}/analysis/dashboard
+```
+
+### 403 Forbidden
+
+Use a resume owned by another user:
+
+```http
+POST {{base_url}}/analyze
+Authorization: Bearer {{token}}
+```
 
 ```json
 {
-  "message": "SQLSTATE[HY000] [1045] Access denied for user..."
+  "resume_id": "{{other_user_resume_id}}"
 }
 ```
 
-Restore the correct `.env` value after testing, then restart Laravel.
+### 422 Validation Error
 
-## Postman Run Order
+```http
+POST {{base_url}}/auth/login
+```
 
-1. `Authorization / POST Register`
-2. `Authorization / POST Login`
-3. Save the returned `token`.
-4. `Resume / POST Upload Resume`
-5. Save `resume.resume_id` as `resume_id`.
+```json
+{
+  "email": "postman@example.com"
+}
+```
+
+## Recommended Run Order
+
+1. `Health / GET Test`
+2. `Auth / POST Register`
+3. `Auth / POST Login`
+4. `Profile / GET Profile`
+5. `Resume / POST Upload Resume`
 6. `Analysis / POST Analyze Resume`
-7. `Analysis / GET Dashboard`
-8. `Gateway / External Services / GET Gateway Route Map`
-9. `Gateway / External Services / POST Login via Site 1 Gateway`
-10. `Gateway / External Services / GET Profile via Site 2 Gateway`
-11. Run the Error Handling examples.
+7. `Analysis / GET Analysis Dashboard`
+8. `Recommendations / GET Resume Recommendations`
+9. `Jobs / POST Create Job`
+10. `Jobs / POST Match Job To Resume`
+11. `Integrations / GET Geocode Address`
+12. `Integrations / GET Live Jobs`
+13. `Notifications / POST Send Notification Email`
+14. `Gateway Routes / GET Gateway Route Map`
+15. `Error Handling` examples
