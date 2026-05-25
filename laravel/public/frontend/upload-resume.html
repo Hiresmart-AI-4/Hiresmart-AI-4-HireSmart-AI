@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Resume | HireSmart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="logo" href="dashboard.html">HireSmart AI</a>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a class="active" href="upload-resume.html">Upload</a>
+            <button id="logoutButton" class="link-button" type="button">Logout</button>
+        </nav>
+    </header>
+
+    <main class="page-grid">
+        <section class="panel upload-panel">
+            <span class="eyebrow">Resume check</span>
+            <h1>Attach a resume</h1>
+            <form id="resumeForm" class="form-stack" enctype="multipart/form-data">
+                <label for="title">Resume title</label>
+                <input type="text" id="title" placeholder="Frontend Developer Resume" required>
+
+                <label for="jobDescription">Target job description</label>
+                <textarea id="jobDescription" rows="6" placeholder="Paste the job post or required skills for a sharper check."></textarea>
+
+                <label for="resume">Resume file</label>
+                <input type="file" id="resume" accept=".pdf,.docx" required>
+
+                <button type="submit">Upload and check</button>
+            </form>
+            <p id="message" class="form-message" aria-live="polite"></p>
+        </section>
+
+        <section class="panel result-panel">
+            <span class="eyebrow">Result</span>
+            <div id="result" class="empty-state">Your resume score and feedback will appear here after upload.</div>
+        </section>
+    </main>
+    <script src="app.js?v=20260525-full-console"></script>
+</body>
+</html>

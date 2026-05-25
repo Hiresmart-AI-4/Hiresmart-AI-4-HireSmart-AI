@@ -10,23 +10,23 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             if (! Schema::hasColumn('users', 'role')) {
-                $table->string('role')->default('job_seeker')->after('password');
+                $table->string('role')->default('job_seeker');
             }
 
             if (! Schema::hasColumn('users', 'phone')) {
-                $table->string('phone')->nullable()->after('role');
+                $table->string('phone')->nullable();
             }
 
             if (! Schema::hasColumn('users', 'profile_picture')) {
-                $table->string('profile_picture')->nullable()->after('phone');
+                $table->string('profile_picture')->nullable();
             }
 
             if (! Schema::hasColumn('users', 'bio')) {
-                $table->text('bio')->nullable()->after('profile_picture');
+                $table->text('bio')->nullable();
             }
 
             if (! Schema::hasColumn('users', 'preferences')) {
-                $table->json('preferences')->nullable()->after('bio');
+                $table->json('preferences')->nullable();
             }
         });
     }
@@ -34,7 +34,17 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['role', 'phone', 'profile_picture', 'bio', 'preferences']);
+            $columns = array_filter([
+                Schema::hasColumn('users', 'role') ? 'role' : null,
+                Schema::hasColumn('users', 'phone') ? 'phone' : null,
+                Schema::hasColumn('users', 'profile_picture') ? 'profile_picture' : null,
+                Schema::hasColumn('users', 'bio') ? 'bio' : null,
+                Schema::hasColumn('users', 'preferences') ? 'preferences' : null,
+            ]);
+
+            if ($columns !== []) {
+                $table->dropColumn($columns);
+            }
         });
     }
 };

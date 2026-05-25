@@ -10,24 +10,40 @@ services:
       - key: APP_NAME
         value: "HireSmart AI"
       - key: APP_ENV
-        value: "production"
+        value: production
       - key: APP_DEBUG
         value: "false"
       - key: LOG_CHANNEL
-        value: "stderr"
+        value: stderr
+      - key: LOG_LEVEL
+        value: info
       - key: CACHE_STORE
-        value: "file"
+        value: file
       - key: QUEUE_CONNECTION
-        value: "sync"
+        value: sync
       - key: SESSION_DRIVER
-        value: "file"
-      - key: APP_KEY
-        value: "base64:aB/8R6bWPx0utUhlrOZlCciTIIWe6Tx34HVMJq0avNY="
-      - key: APP_URL
-        value: "https://hiresmart-ai.onrender.com"
+        value: file
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
       - key: DB_CONNECTION
-        value: "pgsql"
+        value: pgsql
+      - key: APP_KEY
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
       - key: DB_URL
         sync: false
       - key: RUN_MIGRATIONS
         value: "true"
+      - key: PORT
+        value: "10000"

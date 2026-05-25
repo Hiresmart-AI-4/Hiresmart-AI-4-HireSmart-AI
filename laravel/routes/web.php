@@ -15,7 +15,7 @@ $withoutWebState = [
 
 $renderApp = function (string $section = 'dashboard') {
     $databaseStatus = 'Connected';
-    $databaseNote = 'Live MySQL metrics';
+    $databaseNote = 'Live PostgreSQL metrics';
 
     try {
         $totalResumes = Resume::count();
@@ -44,7 +44,7 @@ $renderApp = function (string $section = 'dashboard') {
         ])->values();
     } catch (Throwable $e) {
         $databaseStatus = 'Offline';
-        $databaseNote = 'Check XAMPP MySQL credentials';
+        $databaseNote = 'Check database connection settings (DB_* or DB_URL)';
         $totalResumes = 0;
         $analyzedResumes = 0;
         $averageScore = 0;
@@ -55,7 +55,7 @@ $renderApp = function (string $section = 'dashboard') {
         $scoreTrend = collect();
     }
 
-    $docsPath = base_path('../docs/API_DOCUMENTATION.md');
+    $docsPath = storage_path('app/deploy-docs/API_DOCUMENTATION.md');
     $docs = file_exists($docsPath) ? file_get_contents($docsPath) : 'API documentation file not found.';
     $boot = json_encode([
         'activeSection' => $section,
@@ -299,19 +299,23 @@ $renderApp = function (string $section = 'dashboard') {
     HTML);
 };
 
-Route::get('/', fn () => response()->file(base_path('../frontend/login.html')))->withoutMiddleware($withoutWebState);
+Route::get('/', fn () => response()->file(public_path('frontend/login.html')))->withoutMiddleware($withoutWebState);
 Route::get('/workspace', fn () => $renderApp('dashboard'))->withoutMiddleware($withoutWebState);
 Route::get('/dashboard-preview', fn () => $renderApp('dashboard'))->withoutMiddleware($withoutWebState);
 Route::get('/api-docs', fn () => $renderApp('docs'))->withoutMiddleware($withoutWebState);
 
-Route::get('/login.html', fn () => response()->file(base_path('../frontend/login.html')))->withoutMiddleware($withoutWebState);
-Route::get('/register.html', fn () => response()->file(base_path('../frontend/register.html')))->withoutMiddleware($withoutWebState);
-Route::get('/dashboard.html', fn () => response()->file(base_path('../frontend/dashboard.html')))->withoutMiddleware($withoutWebState);
-Route::get('/upload-resume.html', fn () => response()->file(base_path('../frontend/upload-resume.html')))->withoutMiddleware($withoutWebState);
-Route::get('/results.html', fn () => response()->file(base_path('../frontend/results.html')))->withoutMiddleware($withoutWebState);
-Route::get('/app.js', fn () => response()->file(base_path('../frontend/app.js'), ['Content-Type' => 'application/javascript']))->withoutMiddleware($withoutWebState);
-Route::get('/style.css', fn () => response()->file(base_path('../frontend/style.css'), ['Content-Type' => 'text/css']))->withoutMiddleware($withoutWebState);
+Route::get('/login.html', fn () => response()->file(public_path('frontend/login.html')))->withoutMiddleware($withoutWebState);
+Route::get('/register.html', fn () => response()->file(public_path('frontend/register.html')))->withoutMiddleware($withoutWebState);
+Route::get('/dashboard.html', fn () => response()->file(public_path('frontend/dashboard.html')))->withoutMiddleware($withoutWebState);
+Route::get('/upload-resume.html', fn () => response()->file(public_path('frontend/upload-resume.html')))->withoutMiddleware($withoutWebState);
+Route::get('/results.html', fn () => response()->file(public_path('frontend/results.html')))->withoutMiddleware($withoutWebState);
+Route::get('/app.js', fn () => response()->file(public_path('frontend/app.js'), ['Content-Type' => 'application/javascript']))->withoutMiddleware($withoutWebState);
+Route::get('/style.css', fn () => response()->file(public_path('frontend/style.css'), ['Content-Type' => 'text/css']))->withoutMiddleware($withoutWebState);
 
 Route::get('/api-docs/postman-collection', function () {
-    return response()->download(base_path('../docs/HireSmart_AI_Postman_Collection.json'));
+    $path = storage_path('app/deploy-docs/HireSmart_AI_Postman_Collection.json');
+
+    abort_unless(file_exists($path), 404, 'Postman collection not found.');
+
+    return response()->download($path);
 })->withoutMiddleware($withoutWebState);

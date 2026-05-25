@@ -1,30 +1,54 @@
-# Render Deployment (PostgreSQL Blueprint)
+# Render Deployment (PostgreSQL + Docker)
 
-This project is configured to deploy to Render as a Docker-based Web Service integrated with your existing native PostgreSQL database using a Render Blueprint (`render.yaml`).
+This project deploys to Render as a Docker web service. The Laravel application lives in `laravel/` and connects to Render PostgreSQL using environment variables.
 
-## Zero-Configuration Blueprint Setup
+## Blueprint setup
 
 1. In the [Render Dashboard](https://dashboard.render.com/), click **New +** > **Blueprint**.
-2. Select and connect your repository: **`Hiresmart-AI-4-HireSmart-AI`**.
-3. Render will analyze the repository and configure the Web Service automatically using your existing database.
+2. Connect this repository.
+3. Render reads `render.yaml` and creates the web service.
 
-## Required Secrets on Setup
+## Required environment variables
 
-On the Blueprint setup page, enter:
+Set these in the Render service (Blueprint prompts or **Environment** tab):
 
-* **`APP_KEY`**: Paste your secure production key.
-  * Local-generated key: `base64:aB/8R6bWPx0utUhlrOZlCciTIIWe6Tx34HVMJq0avNY=`
-* **`APP_URL`**: Your deployed service URL (e.g., `https://your-service-name.onrender.com`).
-* **`DB_URL`**: Paste the **Internal Database URL** of your existing Render PostgreSQL database (`hiresmart-db`).
-  * You can find this connection URL under the **Connections** section on your database's page in the Render dashboard. It starts with `postgresql://`.
+| Variable | Description |
+|----------|-------------|
+| `APP_KEY` | Run `php artisan key:generate --show` locally and paste the `base64:...` value |
+| `APP_URL` | Public URL, e.g. `https://hiresmart-ai.onrender.com` |
+| `DB_CONNECTION` | `pgsql` (set in blueprint) |
+| `DB_HOST` | PostgreSQL host from Render |
+| `DB_PORT` | `5432` |
+| `DB_DATABASE` | Database name |
+| `DB_USERNAME` | Database user |
+| `DB_PASSWORD` | Database password |
 
-All other database connections (`DB_CONNECTION=pgsql` and migrations) are automatically wired up by the Blueprint.
+Alternatively, set **`DB_URL`** to the Render **Internal Database URL** (`postgresql://...`). Laravel reads `DB_URL` or `DATABASE_URL`.
 
-## Startup and Migrations
+## Container startup
 
-Upon starting, the container executes `sh docker/render-start.sh` which:
-1. Performs optimal caching configuration (`php artisan config:cache`, `php artisan view:cache`).
-2. Runs database migrations automatically (`php artisan migrate --force` if `RUN_MIGRATIONS=true`).
-3. Starts the server on port `10000`.
+`docker/render-start.sh` runs on each deploy:
 
-Check the **Logs** tab in Render to monitor database migrations and runtime status. Visit `/workspace` to confirm live connection to the database.
+1. Ensures storage/bootstrap cache directories exist
+2. Runs `php artisan migrate --force` when `RUN_MIGRATIONS=true`
+3. Caches config, routes, and views
+4. Starts `php artisan serve` on `PORT` (default `10000`)
+
+## Verify deployment
+
+- **Logs**: migration output and `Server running`
+- **Health**: `GET /up`
+- **API**: `GET /api/test`
+- **Workspace**: `GET /workspace`
+
+## Local Docker test
+
+```bash
+docker build -t hiresmart-ai .
+docker run --rm -p 10000:10000 \
+  -e APP_KEY=base64:YOUR_KEY \
+  -e APP_URL=http://127.0.0.1:10000 \
+  -e DB_CONNECTION=pgsql \
+  -e DB_URL=postgresql://user:pass@host:5432/dbname \
+  hiresmart-ai
+```
