@@ -1,56 +1,28 @@
-# Render Deployment
+# Render Deployment (PostgreSQL Blueprint)
 
-This project is deployed on Render as a Docker web service that starts Laravel with:
+This project is configured to deploy to Render as a Docker-based Web Service integrated with a native PostgreSQL database using a Render Blueprint (`render.yaml`).
 
-```sh
-php artisan serve --host=0.0.0.0 --port="${PORT:-10000}"
-```
+## Zero-Configuration Blueprint Setup
 
-Use the repository root as the Docker context. The Laravel app depends on sibling folders such as `frontend/` and `docs/`, so do not set the Render root directory to `laravel/`.
+1. In the [Render Dashboard](https://dashboard.render.com/), click **New +** > **Blueprint**.
+2. Select and connect your repository: **`Hiresmart-AI-4-HireSmart-AI`**.
+3. Render automatically provisions the PostgreSQL database (`hiresmart-db`) and links it securely to your Web Service.
 
-## Render Setup
+## Required Secrets on Setup
 
-1. Push the repository to GitHub.
-2. In Render, create a new Blueprint from `render.yaml`, or create a Web Service manually.
-3. If creating manually:
-   - Runtime: Docker
-   - Dockerfile path: `./Dockerfile`
-   - Docker context: `.`
-   - Root directory: leave blank
-4. Add the required environment variables.
+On the Blueprint setup page, enter:
 
-## Required Environment Variables
+* **`APP_KEY`**: Paste your secure production key.
+  * Local-generated key: `base64:aB/8R6bWPx0utUhlrOZlCciTIIWe6Tx34HVMJq0avNY=`
+* **`APP_URL`**: Your deployed service URL (e.g., `https://your-service-name.onrender.com`).
 
-```env
-APP_KEY=base64:your-generated-laravel-key
-APP_URL=https://your-render-service.onrender.com
+All other database connections (`DB_CONNECTION=pgsql`, `DB_URL` from the database `connectionString`) are automatically wired up by the Blueprint.
 
-DB_CONNECTION=mysql
-DB_HOST=your-mysql-host
-DB_PORT=3306
-DB_DATABASE=your-database-name
-DB_USERNAME=your-database-user
-DB_PASSWORD=your-database-password
-```
+## Startup and Migrations
 
-Render provides PostgreSQL natively. If the app stays on MySQL, use an external hosted MySQL database and paste those credentials into Render.
+Upon starting, the container executes `sh docker/render-start.sh` which:
+1. Performs optimal caching configuration (`php artisan config:cache`, `php artisan view:cache`).
+2. Runs database migrations automatically (`php artisan migrate --force` if `RUN_MIGRATIONS=true`).
+3. Starts the server on port `10000`.
 
-## Generate APP_KEY
-
-Run this locally inside `laravel/`:
-
-```sh
-php artisan key:generate --show
-```
-
-Copy the generated value into Render as `APP_KEY`.
-
-## Migrations
-
-`RUN_MIGRATIONS=true` makes the container run:
-
-```sh
-php artisan migrate --force
-```
-
-before starting the web server. Set `RUN_MIGRATIONS=false` if you want to run migrations manually.
+Check the **Logs** tab in Render to monitor database migrations and runtime status. Visit `/workspace` to confirm live connection to the database.
