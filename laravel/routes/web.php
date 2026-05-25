@@ -100,7 +100,6 @@ $renderApp = function (string $section = 'dashboard') {
                         <button class="nav-item active" data-section="dashboard">Dashboard</button>
                         <button class="nav-item" data-section="auth">Site 1 Auth</button>
                         <button class="nav-item" data-section="profile">Site 2 Profile</button>
-                        <button class="nav-item" data-section="api">API Console</button>
                         <button class="nav-item" data-section="docs">Documentation</button>
                     </nav>
                     <nav class="nav-block" aria-label="Resources">
@@ -263,29 +262,6 @@ $renderApp = function (string $section = 'dashboard') {
                                 </div>
                                 <pre class="code-output" id="tokenOutput">No token saved.</pre>
                             </section>
-                        </div>
-                    </section>
-
-                    <section class="view" id="view-api">
-                        <div class="panel">
-                            <div class="panel-head">
-                                <div>
-                                    <h2>API Console</h2>
-                                    <p>Run common API checks from the browser.</p>
-                                </div>
-                            </div>
-                            <div class="button-row">
-                                <button class="secondary-button" data-api-action="test">GET /api/test</button>
-                                <button class="secondary-button" data-api-action="gateway">GET /api/gateway/routes</button>
-                                <button class="secondary-button" data-api-action="dashboard">GET /api/analysis/dashboard</button>
-                                <button class="secondary-button" data-api-action="profile">GET /api/site2/users/profile</button>
-                            </div>
-                            <div class="endpoint-list">
-                                <code>POST /api/site1/register</code>
-                                <code>POST /api/site1/login</code>
-                                <code>GET /api/site2/users/profile</code>
-                                <code>GET /api/analysis/dashboard</code>
-                            </div>
                         </div>
                     </section>
 

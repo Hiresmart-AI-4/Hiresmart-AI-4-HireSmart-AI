@@ -34,6 +34,44 @@ Route::post('/debug/400', function (Request $request) {
     ]);
 });
 
+Route::get('/debug/401', function () {
+    return response()->json([
+        'message' => 'Unauthenticated.',
+    ], 401);
+});
+
+Route::match(['GET', 'POST', 'PUT', 'DELETE'], '/debug/422/{example?}', function (?string $example = null) {
+    $errors = match ($example) {
+        'duplicate-email' => ['email' => ['The email has already been taken.']],
+        'invalid-credentials' => ['email' => ['The provided credentials are incorrect.']],
+        'missing-password' => ['password' => ['The password field is required.']],
+        'invalid-file' => ['resume' => ['The resume field must be a file of type: pdf, docx.']],
+        default => ['field' => ['The field is required or invalid.']],
+    };
+
+    return response()->json([
+        'errors' => $errors,
+    ], 422);
+});
+
+Route::get('/debug/403', function () {
+    return response()->json([
+        'message' => 'Unauthorized',
+    ], 403);
+});
+
+Route::get('/debug/404', function () {
+    return response()->json([
+        'message' => 'No query results for model.',
+    ], 404);
+});
+
+Route::get('/debug/500', function () {
+    return response()->json([
+        'message' => 'Server error. Check Laravel logs and .env configuration.',
+    ], 500);
+});
+
 Route::get('/gateway/routes', function (ApiGateway $gateway) {
     return $gateway->success([
         'routes' => $gateway->routeMap(),

@@ -668,7 +668,12 @@ Each request in the Postman collection now includes response examples where appl
 | Notifications | `GET /notifications` | `401` missing token |
 | Notifications | `POST /notifications/email` | `401`; `422` invalid email/subject/message or missing Brevo key |
 | Gateway Routes | `/site1/*`, `/site2/*` | Same errors as their direct Auth/Profile equivalents |
-| Error Handling | `POST /debug/400` | `400` when `Content-Type` is not `application/json` or JSON is malformed |
+| Error Handling | `POST /debug/400` | Reliable `400` demo |
+| Error Handling | `GET /debug/401` | Reliable `401` demo |
+| Error Handling | `/debug/422/{example}` | Reliable `422` demos for GET/POST/PUT/DELETE: `validation`, `duplicate-email`, `invalid-credentials`, `missing-password`, `invalid-file` |
+| Error Handling | `GET /debug/403` | Reliable `403` demo |
+| Error Handling | `GET /debug/404` | Reliable `404` demo |
+| Error Handling | `GET /debug/500` | Reliable `500` demo |
 
 ### 400 Bad Request
 
@@ -685,37 +690,36 @@ hello
 
 ### 401 Unauthorized
 
-Call any protected route without `Authorization`.
+Use the reliable demo route, or call any protected route without `Authorization`.
 
 ```http
-GET {{base_url}}/analysis/dashboard
+GET {{base_url}}/debug/401
 ```
 
 ### 403 Forbidden
 
-Use a resume owned by another user:
+Use the reliable demo route, or use a resume owned by another user:
 
 ```http
-POST {{base_url}}/analyze
-Authorization: Bearer {{token}}
+GET {{base_url}}/debug/403
 ```
 
-```json
-{
-  "resume_id": "{{other_user_resume_id}}"
-}
+### 404 Not Found
+
+```http
+GET {{base_url}}/debug/404
 ```
 
 ### 422 Validation Error
 
 ```http
-POST {{base_url}}/auth/login
+GET {{base_url}}/debug/422/validation
 ```
 
-```json
-{
-  "email": "postman@example.com"
-}
+### 500 Server Error
+
+```http
+GET {{base_url}}/debug/500
 ```
 
 ## Recommended Run Order

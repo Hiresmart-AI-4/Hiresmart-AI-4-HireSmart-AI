@@ -76,8 +76,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -110,8 +118,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -161,9 +177,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -179,9 +203,17 @@
             {
               "name": "422 - Duplicate email",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/duplicate-email",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -198,8 +230,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -262,9 +302,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -280,9 +328,17 @@
             {
               "name": "422 - Invalid credentials",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/invalid-credentials",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -299,8 +355,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -363,9 +427,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -382,8 +454,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -426,8 +506,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -444,8 +532,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -462,8 +558,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -514,8 +618,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -531,9 +643,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -550,8 +670,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -568,8 +696,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -586,8 +722,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -625,8 +769,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -642,9 +794,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -661,8 +821,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -720,8 +888,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -737,9 +913,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -756,8 +940,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -774,8 +966,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -828,8 +1028,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -846,8 +1054,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -864,8 +1080,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -903,8 +1127,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -921,8 +1153,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -939,8 +1179,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -957,8 +1205,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1009,8 +1265,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1026,9 +1290,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -1045,8 +1317,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -1063,8 +1343,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1081,8 +1369,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1120,8 +1416,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1137,9 +1441,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -1156,8 +1468,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -1174,8 +1494,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1192,8 +1520,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1231,8 +1567,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1249,8 +1593,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -1267,8 +1619,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1285,8 +1645,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1324,8 +1692,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1342,8 +1718,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -1360,8 +1744,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1378,8 +1770,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1417,8 +1817,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1435,8 +1843,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1453,8 +1869,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1510,8 +1934,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1527,9 +1959,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -1546,8 +1986,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1564,8 +2012,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1603,8 +2059,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1621,8 +2085,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -1639,8 +2111,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1657,8 +2137,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1696,8 +2184,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1714,8 +2210,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -1732,8 +2236,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1750,8 +2262,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1794,8 +2314,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1812,8 +2340,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -1830,8 +2366,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1848,8 +2392,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1892,8 +2444,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1910,8 +2470,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -1928,8 +2496,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -1980,8 +2556,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -1997,9 +2581,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -2016,8 +2608,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -2034,8 +2634,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2085,8 +2693,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -2103,8 +2719,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -2121,8 +2745,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -2139,8 +2771,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2191,8 +2831,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -2208,9 +2856,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -2227,8 +2883,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -2245,8 +2909,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -2263,8 +2935,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2315,8 +2995,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -2332,9 +3020,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -2351,8 +3047,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -2369,8 +3073,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -2387,8 +3099,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2426,8 +3146,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -2444,8 +3172,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -2462,8 +3198,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2506,8 +3250,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -2523,9 +3275,25 @@
             {
               "name": "400 - Geocoding unavailable",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "text/plain"
+                  }
+                ],
+                "url": "{{base_url}}/debug/400",
+                "body": {
+                  "mode": "raw",
+                  "raw": "hello"
+                },
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Bad Request",
               "code": 400,
@@ -2536,14 +3304,22 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"message\": \"Unable to geocode address. Verify Geoapify API configuration.\"\n}"
+              "body": "{\n  \"message\": \"Bad Request: Content-Type application/json is required.\"\n}"
             },
             {
               "name": "422 - Validation error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -2560,8 +3336,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2599,8 +3383,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -2617,8 +3409,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -2635,8 +3435,16 @@
               "name": "422 - Validation error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -2653,8 +3461,13 @@
               "name": "200 - Provider key missing",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/jobs/live?what=Laravel%20Developer&where=Cebu"
               },
               "status": "OK",
               "code": 200,
@@ -2671,8 +3484,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2715,8 +3536,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -2733,8 +3562,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2785,8 +3622,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -2802,9 +3647,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -2820,9 +3673,17 @@
             {
               "name": "422 - Mail provider missing",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -2833,14 +3694,22 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"errors\": {\n    \"sendgrid\": [\n      \"Brevo API key is missing.\"\n    ]\n  }\n}"
+              "body": "{\n  \"errors\": {\n    \"field\": [\n      \"The field is required or invalid.\"\n    ]\n  }\n}"
             },
             {
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2878,8 +3747,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -2924,9 +3801,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -2942,9 +3827,17 @@
             {
               "name": "422 - Duplicate email",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/duplicate-email",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -2961,8 +3854,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3025,9 +3926,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3043,9 +3952,17 @@
             {
               "name": "422 - Invalid credentials",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/invalid-credentials",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3062,8 +3979,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3126,9 +4051,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3145,8 +4078,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3184,8 +4125,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -3202,8 +4151,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -3220,8 +4177,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3272,8 +4237,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -3289,9 +4262,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3308,8 +4289,16 @@
               "name": "404 - Resource not found",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/404",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Not Found",
               "code": 404,
@@ -3326,8 +4315,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -3344,8 +4341,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3383,8 +4388,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -3400,9 +4413,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3419,8 +4440,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3465,9 +4494,25 @@
             {
               "name": "400 - Bad request",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "text/plain"
+                  }
+                ],
+                "url": "{{base_url}}/debug/400",
+                "body": {
+                  "mode": "raw",
+                  "raw": "hello"
+                },
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Bad Request",
               "code": 400,
@@ -3483,9 +4528,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3502,8 +4555,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3536,8 +4597,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3588,8 +4657,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -3605,9 +4682,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3624,8 +4709,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3670,9 +4763,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3688,9 +4789,17 @@
             {
               "name": "422 - Invalid credentials",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/invalid-credentials",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3707,8 +4816,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
@@ -3761,8 +4878,16 @@
               "name": "401 - Missing or invalid token",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/401",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unauthorized",
               "code": 401,
@@ -3778,9 +4903,17 @@
             {
               "name": "422 - Validation error",
               "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/422/validation",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Unprocessable Entity",
               "code": 422,
@@ -3797,8 +4930,16 @@
               "name": "403 - Not owner of resource",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/403",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Forbidden",
               "code": 403,
@@ -3815,8 +4956,16 @@
               "name": "500 - Server/database/config error",
               "originalRequest": {
                 "method": "GET",
-                "header": [],
-                "url": "{{base_url}}"
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/debug/500",
+                "auth": {
+                  "type": "noauth"
+                }
               },
               "status": "Internal Server Error",
               "code": 500,
