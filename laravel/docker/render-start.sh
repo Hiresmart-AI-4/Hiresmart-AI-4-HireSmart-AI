@@ -8,15 +8,26 @@ if [ -z "${APP_KEY:-}" ]; then
     exit 1
 fi
 
+# Use file-based cache/sessions at boot (avoids missing DB tables before migrate)
+export CACHE_STORE=file
+export SESSION_DRIVER=file
+export QUEUE_CONNECTION=sync
+
 mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache
 chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 
 php artisan storage:link --force 2>/dev/null || true
-php artisan optimize:clear
 
+# Run migrations first so PostgreSQL tables (cache, sessions, etc.) exist
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
     php artisan migrate --force
 fi
+
+# Clear stale bootstrap files (do not use optimize:clear — it hits DB cache before tables exist)
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
 
 php artisan config:cache
 php artisan route:cache
