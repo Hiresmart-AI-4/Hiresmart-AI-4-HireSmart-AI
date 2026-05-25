@@ -1,9 +1,3 @@
-databases:
-  - name: hiresmart-db
-    databaseName: hiresmart
-    user: hiresmart_user
-    plan: free
-
 services:
   - type: web
     name: hiresmart-ai
@@ -34,8 +28,6 @@ services:
       - key: DB_CONNECTION
         value: "pgsql"
       - key: DB_URL
-        fromDatabase:
-          name: hiresmart-db
-          property: connectionString
+        sync: false
       - key: RUN_MIGRATIONS
         value: "true"
