@@ -685,6 +685,17 @@ async function triggerJobSearch(what, where) {
         const data = await apiRequest(`/jobs/live?what=${encodeURIComponent(what)}&where=${encodeURIComponent(where)}`);
         const jobs = data.jobs || [];
 
+        if (data.configured === false) {
+            jobList.innerHTML = `
+                <div class="empty-state" style="border-color: var(--accent); color: var(--accent); background: rgba(180, 83, 9, 0.05); padding: 20px; border-radius: 8px;">
+                    <h4 style="margin:0 0 8px 0; font-size:1.1rem;">⚠️ Live Job Matches are not configured</h4>
+                    <p style="margin:0 0 8px 0; font-size:0.95rem;">The server is missing the required Jooble integration credentials. To solve this, copy your <code>JOOBLE_API_KEY</code> and add it under the <strong>Environment</strong> section in your Render Web Service dashboard.</p>
+                    <small style="opacity: 0.85;">Provider message: ${escapeHtml(data.provider_message || 'Missing JOOBLE_API_KEY')}</small>
+                </div>
+            `;
+            return;
+        }
+
         if (!jobs.length) {
             jobList.innerHTML = '<div class="empty-state">No matching live jobs found. Try different keywords.</div>';
             return;
