@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HireSmart Dashboard</title>
+    <title>HireSmart Workspace Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,41 +16,151 @@
         </nav>
     </header>
 
-    <main class="dashboard">
-        <section class="hero-band">
-            <div>
-                <span class="eyebrow">Welcome</span>
-                <h1 id="welcomeTitle">Resume analysis dashboard</h1>
-                <p>Track uploaded resumes, ATS scores, and recent screening feedback.</p>
-            </div>
-            <div class="hero-actions">
-                <a class="button-link" href="upload-resume.html">Upload resume</a>
-            </div>
-        </section>
+    <main class="workspace-container">
+        <!-- Workspace Sidebar Tabs -->
+        <aside class="workspace-sidebar">
+            <span class="eyebrow" style="margin-left: 16px; margin-bottom: 8px; display: block;">Workspace</span>
+            <button class="sidebar-tab-btn active" data-tab="overview-tab">
+                <span>📊 Overview</span>
+            </button>
+            <button class="sidebar-tab-btn" data-tab="jobs-tab">
+                <span>🔍 Job Matcher</span>
+            </button>
+            <button class="sidebar-tab-btn" data-tab="notifications-tab">
+                <span>🔔 Notifications</span>
+            </button>
+            <button class="sidebar-tab-btn" data-tab="profile-tab">
+                <span>👤 Profile Settings</span>
+            </button>
+        </aside>
 
-        <section class="stats-grid">
-            <article class="stat-card">
-                <span>Total resumes</span>
-                <strong id="totalResumes">0</strong>
-            </article>
-            <article class="stat-card">
-                <span>Average score</span>
-                <strong id="averageScore">0</strong>
-            </article>
-            <article class="stat-card">
-                <span>Latest score</span>
-                <strong id="latestScore">0</strong>
-            </article>
-        </section>
+        <!-- Workspace Tab Content Views -->
+        <section class="workspace-views">
+            
+            <!-- OVERVIEW TAB -->
+            <div id="overview-tab" class="tab-content active">
+                <section class="hero-band" style="border-radius: 8px; margin-bottom: 24px;">
+                    <div>
+                        <span class="eyebrow" style="color: #fcd34d;">Welcome</span>
+                        <h1 id="welcomeTitle">Resume analysis dashboard</h1>
+                        <p>Track uploaded resumes, ATS scores, and run side-by-side score comparisons.</p>
+                    </div>
+                    <div class="hero-actions">
+                        <a class="button-link" href="upload-resume.html">Upload resume</a>
+                    </div>
+                </section>
 
-        <section class="panel">
-            <div class="section-heading">
-                <h2>Recent resumes</h2>
-                <span id="dashboardMessage" class="inline-message" aria-live="polite"></span>
+                <section class="stats-grid">
+                    <article class="stat-card">
+                        <span>Total resumes</span>
+                        <strong id="totalResumes">0</strong>
+                    </article>
+                    <article class="stat-card">
+                        <span>Average score</span>
+                        <strong id="averageScore">0</strong>
+                    </article>
+                    <article class="stat-card">
+                        <span>Latest score</span>
+                        <strong id="latestScore">0</strong>
+                    </article>
+                </section>
+
+                <section class="panel">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Recent Resumes</h2>
+                            <p class="muted" style="margin: 0; font-size: 0.88rem;">Select two checkboxes to run comparison.</p>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <button id="compareResumesBtn" class="mini-btn">Compare Resumes</button>
+                            <span id="dashboardMessage" class="inline-message" aria-live="polite"></span>
+                        </div>
+                    </div>
+                    <div id="resumeList" class="resume-list">
+                        <!-- Dynamic list populated via JS -->
+                    </div>
+                </section>
             </div>
-            <div id="resumeList" class="resume-list"></div>
+
+            <!-- JOB MATCHER TAB -->
+            <div id="jobs-tab" class="tab-content">
+                <section class="panel">
+                    <span class="eyebrow">Search Live Jobs</span>
+                    <h2>Job Matcher & Geocoding</h2>
+                    <p class="muted">Enter keywords to query live postings. AI matches your latest uploaded resume's ATS score in real-time.</p>
+                    
+                    <form id="jobSearchForm" class="job-search-box">
+                        <input type="text" id="jobSearchTitle" placeholder="Frontend Developer, Data Scientist..." required style="flex:2;">
+                        <input type="text" id="jobSearchLocation" placeholder="Location (e.g. London, Remote)..." style="flex:1;">
+                        <button type="submit">Search Jobs</button>
+                    </form>
+                    
+                    <div id="jobList" class="job-list-container" style="margin-top: 24px;">
+                        <!-- Live job cards populated via search -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- NOTIFICATIONS TAB -->
+            <div id="notifications-tab" class="tab-content">
+                <section class="panel">
+                    <span class="eyebrow">Activity Logs</span>
+                    <h2>Notifications & Notifications</h2>
+                    <p class="muted">Review system notices and email resume match recommendations directly to your inbox.</p>
+                    
+                    <div id="notificationList" style="margin-top: 20px;">
+                        <!-- Loaded dynamic system notifications -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- PROFILE SETTINGS TAB -->
+            <div id="profile-tab" class="tab-content">
+                <section class="panel">
+                    <span class="eyebrow">Settings</span>
+                    <h2>Update User Profile</h2>
+                    <p class="muted">Manage your contact information and bio served across HireSmart modules.</p>
+                    
+                    <form id="profileForm" class="form-stack profile-grid" style="margin-top: 24px;">
+                        <div>
+                            <label for="profileName">Full Name</label>
+                            <input type="text" id="profileName" required placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label for="profileEmail">Email Address</label>
+                            <input type="email" id="profileEmail" readonly style="background: var(--surface-alt); cursor: not-allowed;" placeholder="john@example.com">
+                        </div>
+                        <div>
+                            <label for="profilePhone">Phone Number</label>
+                            <input type="text" id="profilePhone" placeholder="+1 (555) 000-0000">
+                        </div>
+                        <div class="span-2">
+                            <label for="profileBio">Professional Bio</label>
+                            <textarea id="profileBio" rows="4" placeholder="Brief summary of your professional experience and core expertise..."></textarea>
+                        </div>
+                        
+                        <div class="span-2" style="margin-top: 10px;">
+                            <button type="submit">Save Changes</button>
+                        </div>
+                    </form>
+                    <p id="profileFeedback" class="form-message" aria-live="polite" style="margin-top: 14px;"></p>
+                </section>
+            </div>
+
         </section>
     </main>
-    <script src="app.js?v=20260525-full-console"></script>
+
+    <!-- Side-by-side ATS Comparison and Job Analysis Modal Overlay -->
+    <div id="compareModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCompareModal()">&times;</button>
+            <h3 id="compareModalTitle" class="eyebrow" style="margin-top: 0; font-size: 0.9rem;">Analysis Result</h3>
+            <div id="compareModalBody" style="margin-top: 18px;">
+                <!-- Dynamically loaded comparison content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=20260528-full-workspace"></script>
 </body>
 </html>
