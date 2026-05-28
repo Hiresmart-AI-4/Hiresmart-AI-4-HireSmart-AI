@@ -840,16 +840,20 @@ function initResumeComparison() {
         `);
 
         try {
-            const data = await apiRequest(`/resumes/compare/${id1}/${id2}`);
-            
-            const r1 = data.original || data.resume_1 || {};
-            const r2 = data.improved || data.resume_2 || {};
-            
-            const s1 = r1.ats_score ?? 0;
-            const s2 = r2.ats_score ?? 0;
-            const diff = s2 - s1;
+            const [r1, r2, compareData] = await Promise.all([
+                apiRequest(`/resumes/${id1}`),
+                apiRequest(`/resumes/${id2}`),
+                apiRequest(`/resumes/compare/${id1}/${id2}`)
+            ]);
+
+            const s1 = r1.ats_score ?? compareData.original_score ?? 0;
+            const s2 = r2.ats_score ?? compareData.improved_score ?? 0;
+            const diff = compareData.score_increase ?? (s2 - s1);
             const trendClass = diff >= 0 ? 'success' : 'danger';
             const prefix = diff >= 0 ? '+' : '';
+
+            const skills1 = r1.parsed_data?.skills || [];
+            const skills2 = r2.parsed_data?.skills || [];
 
             document.getElementById('compareModalBody').innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:16px;">
@@ -868,19 +872,19 @@ function initResumeComparison() {
                         <p class="muted">${escapeHtml(r1.original_filename)}</p>
                         <div class="compare-score">${s1}%</div>
                         <p><strong>Primary Skills:</strong></p>
-                        <ul>${listItems(r1.parsed_data?.skills || ['Not parsed'])}</ul>
+                        <ul>${listItems(skills1.length ? skills1 : ['None parsed'])}</ul>
                     </div>
                     <div class="compare-card">
                         <h4>${escapeHtml(r2.title || 'Revised Resume')}</h4>
                         <p class="muted">${escapeHtml(r2.original_filename)}</p>
                         <div class="compare-score">${s2}%</div>
                         <p><strong>Primary Skills:</strong></p>
-                        <ul>${listItems(r2.parsed_data?.skills || ['Not parsed'])}</ul>
+                        <ul>${listItems(skills2.length ? skills2 : ['None parsed'])}</ul>
                     </div>
                 </div>
                 <div style="margin-top:24px; padding:16px; border-radius:6px; background:var(--surface-alt);">
-                    <p><strong>AI Score Explanation:</strong></p>
-                    <p>${escapeHtml(data.message || data.explanation || 'Score change is calculated based on skill keyword matching and alignment depth improvements.')}</p>
+                    <p><strong>AI Suggestions Applied:</strong></p>
+                    <p>${escapeHtml(compareData.suggestions_applied?.summary || 'ATS score change is calculated based on skill keyword matching and alignment depth improvements.')}</p>
                 </div>
             `;
         } catch(err) {
