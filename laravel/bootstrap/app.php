@@ -48,13 +48,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 default => 500,
             };
 
-            $message = config('app.debug')
-                ? $e->getMessage()
-                : match (true) {
-                    $e instanceof ModelNotFoundException => 'The requested resource was not found.',
-                    $e instanceof QueryException => 'Database is unavailable. Confirm migrations ran on Render PostgreSQL.',
-                    default => 'Server error. Check the Laravel log for details.',
-                };
+            $message = match (true) {
+                $e instanceof ModelNotFoundException => 'The requested resource was not found.',
+                $e instanceof QueryException => 'Database error: ' . $e->getMessage(),
+                default => config('app.debug') ? $e->getMessage() : 'Server error. Check the Laravel log for details.',
+            };
 
             return response()->json(['message' => $message], $status);
         });

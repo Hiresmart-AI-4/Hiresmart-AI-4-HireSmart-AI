@@ -80,10 +80,22 @@ class ResumeController extends Controller
 
     public function show(Request $request, string $id)
     {
-        $resume = Resume::with(['analysis', 'versions'])->findOrFail($id);
+        $resume = Resume::findOrFail($id);
 
         if ((int) $resume->user_id !== (int) $request->user()->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        try {
+            $resume->load('analysis');
+        } catch (\Throwable $e) {
+            // Silently ignore if table is missing
+        }
+
+        try {
+            $resume->load('versions');
+        } catch (\Throwable $e) {
+            // Silently ignore if table is missing
         }
 
         return response()->json($resume);
